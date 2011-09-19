@@ -1,5 +1,1 @@
-files/lm.bot
-files/nickserv.bot
-files/twitter.bot
-files/seen.bot
-files/dnd.bot
+files/*.bot
