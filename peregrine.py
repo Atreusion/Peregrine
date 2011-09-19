@@ -82,7 +82,7 @@ def load_data( path, default={}):
         return data
     return default
 
-def save_data( path, data )
+def save_data( path, data ):
     with open( path, 'w' ) as f: cPickle.dump(data, f)
 
 disabled = load_data('C:\\Users\\David\\Peregrine\\files\\disabled.bot')
