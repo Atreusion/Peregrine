@@ -88,7 +88,6 @@ nickserv = load_data('C:\\Users\\David\\Peregrine\\files\\nickserv.bot')
 
 adminlist = []
 sadminlist = []
-random.seed('boobies')
 memory = {}
 niven = stuffz.niven
 sandvich = stuffz.sandvich
@@ -814,7 +813,6 @@ def remove_dups(L):
 #>>> ";".join(["%s=%s" % (k, v) for k, v in params.items()])
 #'server=mpilgrim;uid=sa;database=master;pwd=secret'
 
-#if not isinstance(n, int):
 
 
 
@@ -835,7 +833,8 @@ def dots(connection, event):
         'You suddenly realize it is unnaturally quiet.', 'Desdemona ogles disconcertingly.', 'You quickly discover one of you has an erection.',
         'You hear the muffled yells of a Mac user being ignored.', 'You hear the shrill screams of an emo kid getting the sense beat into them.',
         'You suddenly realize TylerRilm is nekkid.', "Save your breath $who, you'll need it to blow up your date.", "I am $who's colon.  I get cancer.  I kill $who.",
-        'Everybody points and laughs at $who.', "You enjoy the sweet smell of $who's hopes and dreams burning.", "$who and $someone, sitting in a tree..."]
+        'Everybody points and laughs at $who.', "You enjoy the sweet smell of $who's hopes and dreams burning.", "$who and $someone, sitting in a tree...",
+        'Peregrine quickly looks up.', 'Peregrine quickly pulls his pants up.', 'Peregrine stares at the wall.', 'Peregrine runs into the nearest wall.']
         args = random.choice(dots)
         args = args.replace('$who', nick)
         args = args.replace('$someone', random.choice(userlist[connection.server][channel.lower()]))
@@ -1063,48 +1062,6 @@ def onJoin(connection, event):
     for List in (adminlist,sadminlist):
         if nick in List: List.remove(nick)
 
-##def onDisconnect(connection, event):
-##    print event.source() #irc.nexuswar.com
-##    print event.target() #nuthin'
-##    print event.arguments() #['reason'] i.e. Connection reset by peer
-##    reason=event.arguments()[0]
-##    server=event.source()
-##    if reason<>"I'm afraid, Dave. Dave, my mind is going. I can feel it.":
-##        code = httpget('http://atreus.necrolounge.org')
-##        if "Atreus's Homepage" in code:
-##            time.sleep(5)
-##            if not connection.is_connected():
-##                port = server_data[server]['port']
-##                nickname = server_data[server]['nickname']
-##                server_object = irc.server()
-##                try:
-##                    try:
-##                        server_object.connect(server, port, nickname, ircname="HaskillBot.  Owned by Atreus.")
-##                    except:
-##                        server_object.connect(server, port, nickname)
-##                except:
-##                    print 'Unable to connect to %s' % server
-##        else:
-##            disconnected=True
-##            print 'Internet seems to be down, retrying...'
-##            while disconnected:
-##                time.sleep(60)
-##                code = httpget('http://atreus.necrolounge.org')
-##                if "Atreus's Homepage" in code:
-##                    disconnected=False
-##            if not disconnected:
-##                if not connection.is_connected():
-##                    port = server_data[server]['port']
-##                    nickname = server_data[server]['nickname']
-##                    server_object = irc.server()
-##                    try:
-##                        try:
-##                            server_object.connect(server, port, nickname, ircname="HaskillBot.  Owned by Atreus.")
-##                        except:
-##                            server_object.connect(server, port, nickname)
-##                    except:
-##                        print 'Unable to connect to %s' % server
-
 
 
 
@@ -1327,7 +1284,7 @@ for server in server_data:
     server_object = irc.server()
     try:
         try:
-            server_object.connect(server, port, nickname, ircname="HaskillBot.  Owned by Atreus.")
+            server_object.connect(server, port, nickname, ircname="Peregrine.  Owned by Atreus.")
         except:
             server_object.connect(server, port, nickname)
     except:
