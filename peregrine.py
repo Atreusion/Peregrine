@@ -28,7 +28,6 @@ import tweepy
 hparser = HParser()
 os.system('title Peregrine')
 getcontext().prec=10
-##import feedparser as fp
 
 #Use with the form: mylist=truerandom.getnum(min,max,amount)
 #mylist will be a list containing the true random numbers.
@@ -93,8 +92,6 @@ random.seed('boobies')
 memory = {}
 niven = stuffz.niven
 sandvich = stuffz.sandvich
-urlallow=True
-global urlallow
 userlist={}
 #dnd=stuffz.dnd
 sdw = re.compile("<a href=\"http://en\.wikipedia\.org/wiki/.*\">(.*)</a>")
@@ -102,20 +99,17 @@ uespregex = re.compile("<a href=\"/wiki/(.*)\" title=")
 titlefind = re.compile("<title\s?>(.*)<\/title\s?>", re.I)
 if os.path.exists('C:\\Users\\David\\Peregrine\\files\\tfw.bot'):
     with open('C:\\Users\\David\\Peregrine\\files\\tfw.bot', 'r') as f: tfw = cPickle.load(f)
-    f.close()
-    del f
 else:
     tfw = {}
 if os.path.exists('C:\\Users\\David\\Peregrine\\files\\seen.bot'):
     with open('C:\\Users\\David\\Peregrine\\files\\seen.bot', 'r') as f: seen = cPickle.load(f)
-    f.close()
-    del f
 else:
     seen = {}
 
 
 
 class RepeatingTimer:
+    """Given to Atreus by Kindari.  I think he made it."""
     def __init__(self, delay, function, args=[], kwargs={}, repeat=-1):
         self.delay = delay
         self.function = function
@@ -147,22 +141,16 @@ class RepeatingTimer:
 
 
 
-def rapeup():
+def checkup():
     if os.path.exists('C:\\Users\\David\\Peregrine\\files\\tfw.bot'):
         with open('C:\\Users\\David\\Peregrine\\files\\tfw.bot', 'r') as f: tfwo = cPickle.load(f)
-        f.close()
-        del f
     else:
         tfwo = {}
     if not tfwo == tfw:
         f=open("C:\\Users\\David\\Peregrine\\files\\tfw.bot", "w")
         cPickle.dump(tfw, f)
-        f.close()
-        del f
     if os.path.exists('C:\\Users\\David\\Peregrine\\files\\seen.bot'):
         with open('C:\\Users\\David\\Peregrine\\files\\seen.bot', 'r') as f: seeno = cPickle.load(f)
-        f.close()
-        del f
     else:
         seeno = {}
     if not seeno == seen:
@@ -174,8 +162,8 @@ def rapeup():
 
 
 
-rapetimer = RepeatingTimer(30, rapeup, repeat=-1) # 5 being the seconds between each command, and 10 being the repeats.  if -1 is repeat, infinite repeat
-rapetimer.start()
+checktimer = RepeatingTimer(30, checkup, repeat=-1) # 5 being the seconds between each command, and 10 being the repeats.  if -1 is repeat, infinite repeat
+checktimer.start()
 
 def sortList(x, y):
    x_date = time.mktime(x['updated_parsed'])
@@ -190,11 +178,9 @@ def sortList(x, y):
 
 
 def pquit(restart=False):
-    rapetimer.stop()
+    checktimer.stop()
     if os.path.exists('C:\\Users\\David\\Peregrine\\files\\tfw.bot'):
         with open('C:\\Users\\David\\Peregrine\\files\\tfw.bot', 'r') as f: tfwo = cPickle.load(f)
-        f.close()
-        del f
     else:
         tfwo = {}
     if not tfwo == tfw:
@@ -204,8 +190,6 @@ def pquit(restart=False):
         del f
     if os.path.exists('C:\\Users\\David\\Peregrine\\files\\seen.bot'):
         with open('C:\\Users\\David\\Peregrine\\files\\seen.bot', 'r') as f: seeno = cPickle.load(f)
-        f.close()
-        del f
     else:
         seeno = {}
     if not seeno == seen:
@@ -217,31 +201,6 @@ def pquit(restart=False):
     if restart: os.system('start C:\\Users\\David\\Peregrine\\start.bat')
     sys.exit(0)
 
-
-
-##    necro.cwd('/')
-##    necro.voidcmd('TYPE I')
-##except:
-##    print 'Unable to connect to necrolounge.org 1'
-##def ftp():
-##    try:
-##        f = open('C:\\Users\\David\\Peregrine\\files\\words.html', 'w')
-##        f.write('<html><head><title>Words for the word game</title></head>\n')
-##        f.write('<body><table  border="1"><tr><td colspan="2" align=center><b>Owned words</b></td></tr>\n')
-##        f.write('<tr><td>Word</td><td>Times said</td></tr>\n')
-##        for key in worddict.keys():
-##            f.write('<tr><td>%s</td><td>%s</td></tr>\n' % (key, worddict[key]['count']))
-##        f.write('</table></body></html>')
-##        f.close()
-##        f = open('C:\\Users\\David\\Peregrine\\files\\words.html')
-##        necro.storlines('STOR words.html',f)
-##        f.close()
-##    except:
-##        print 'Unable to connect to necrolounge.org 2'
-##
-##
-##ftptimer = RepeatingTimer(60, ftp, repeat=-1) # 5 being the seconds between each command, and 10 being the repeats.  if -1 is repeat, infinite repeat
-##ftptimer.start()
 
 class twitter_class:
     def __init__(self):
@@ -326,22 +285,12 @@ def onPubmsg(connection, event):
         else:
             seen[nick.lower()]={'secs':time.time(),'action':action,'lines':1,'chars':len(message)}#,'lols':message.lower().count('lol')}
         if lowm == "!version":
-            connection.privmsg(channel, 'I am version .8210101001a :( (You act like this bot will ever be worthy of a version 1)')
-        if lowm.startswith("!search "):
-            args = message[8:]
-            connection.privmsg(channel, 'http://www.uesp.net/wiki/Special:Search?%s' % urllib.urlencode({'search' :args}))
+            connection.privmsg(channel, 'I am version .82g :( (You act like this bot will ever be worthy of a version 1)')
         if lowm.startswith("!wp "):
             args = message[4:]
             args=urllib.urlencode({'' :args})
             args=args[1:].replace('+','_')
             connection.privmsg(channel, 'http://en.wikipedia.org/wiki/%s' % args)
-        if lowm.startswith('!instr '):
-            message = message[7:]
-            words = message.split(' | ')
-            if words[0] in words[1]:
-                connection.privmsg(channel, 'True')
-            else:
-                connection.privmsg(channel, 'False')
         if lowm.startswith('objection') and enabled(connection.server, channel, 'objection') and "#"==channel[0]:
             timer1 = threading.Timer(1.0, connection.action, args=[channel, 'slams his fist'])
             timer2 = threading.Timer(2.0, connection.action, args=[channel, 'points at %s' % (random.choice(userlist[connection.server][channel.lower()]))])
@@ -368,8 +317,8 @@ def onPubmsg(connection, event):
             text = "It's just a jump to the left\nand a step to the righ-igh-ight.\nPut your hands on your hips\nand pull your knees in tight\nbut it's the pelvic thrust\nthat really drives them insa-a-ane.\nLet's do the time warp again!"
             say(connection, channel, text)
         if lowm == "!pastebin" or lowm == "!pb":
-            hi = filter(str.isalnum, nick)
-            connection.privmsg(channel, 'http://atreus.pastebin.com http://pb.necrolounge.org/ http://%s.pastebin.com' % (hi, ))
+            person = filter(str.isalnum, nick)
+            connection.privmsg(channel, 'http://atreus.pastebin.com http://pb.necrolounge.org/ http://%s.pastebin.com' % (person, ))
         if nick in sadminlist and lowm=='!movielist':
             if os.path.exists('C:\\Users\\David\\Peregrine\\files\\movies.bot'):
                 f = open("C:\\Users\\David\\Peregrine\\files\\movies.bot", "r")
@@ -450,16 +399,6 @@ def onPubmsg(connection, event):
                 f.close()
                 del f
                 connection.privmsg(channel, '"%s" removed from Des and Atry\'s movie list.' % (mov, ))
-        if lowm.startswith('!plural '):
-            noun = lowm[8:]
-            if re.search('[sxz]$', noun):
-                connection.action(channel, re.sub('$', 'es', noun))
-            elif re.search('[^aeioudgkprt]h$', noun):
-                connection.action(channel, re.sub('$', 'es', noun))
-            elif re.search('[^aeiou]y$', noun):
-                connection.action(channel, re.sub('y$', 'ies', noun))
-            else:
-                connection.action(channel, noun + 's')
         if lowm.startswith('~toggle ') and nick in adminlist:
     #disabled[server][channel]
             if len(words) == 2:
@@ -611,25 +550,6 @@ def onPubmsg(connection, event):
                         connection.privmsg(channel, 'You fail, good sir.')
             except:
                 connection.privmsg(channel, 'Error')
-        url = re.compile(r"\b\w+://\S*\b")
-        urllist = url.findall(message)
-        global urlallow
-        if enabled(connection.server, channel, 'url') and urlallow:
-            remove_dups(urllist)
-            for each in urllist:
-                try:
-                    code = httpget(each)
-                    title = ''.join(titlefind.findall(code))
-                    title = "".join(hparser.unescape(title.strip().replace('&mdash;', '-').replace('&laquo;', '\xbb').replace('&bull;', '\x95').replace('&middot;', '\xb7')).splitlines()).replace('','')
-                    connection.privmsg(channel, title)
-                    del code
-                    urlallow=False
-                except:
-                    print "\nurl error: %s" % each
-                    print traceback.format_exc()
-            if not urlallow:
-                urltimer=threading.Timer(3.0,urlreset)
-                urltimer.start()
         if lowm.startswith('!niven') and enabled(connection.server, channel, 'niven'):
             if len(words)>1:
                 if lwords[1] in niven.keys():
@@ -1216,9 +1136,6 @@ def nick(connection, event):
     if oldnick in sadminlist:
         sadminlist.remove(oldnick)
         sadminlist.append(newnick)
-#    if newnick.lower() in rape and not newnick.lower() == connection.get_nickname().lower():
-#        connection.notice(newnick, 'Oi! %s!  You have %i pending rape(s)!  Type !gr to get them.' % (newnick,len(rape[newnick.lower()])))
-
 
 searchtext = "<b>We currently do not have an article with this exact name.</b> You can:"
 diffsearchtext = "The database did not find the text of a page that it should have found, named"
@@ -1379,10 +1296,6 @@ def httpget(url,data=None):
         return src
     except:
         pass
-
-def urlreset():
-    urlallow=True
-    global urlallow
 
 
 irc.add_global_handler('welcome', onWelcome)
