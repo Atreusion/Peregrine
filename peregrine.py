@@ -99,14 +99,9 @@ userlist={}
 sdw = re.compile("<a href=\"http://en\.wikipedia\.org/wiki/.*\">(.*)</a>")
 uespregex = re.compile("<a href=\"/wiki/(.*)\" title=")
 titlefind = re.compile("<title\s?>(.*)<\/title\s?>", re.I)
-if os.path.exists('C:\\Users\\David\\Peregrine\\files\\tfw.bot'):
-    with open('C:\\Users\\David\\Peregrine\\files\\tfw.bot', 'r') as f: tfw = cPickle.load(f)
-else:
-    tfw = {}
-if os.path.exists('C:\\Users\\David\\Peregrine\\files\\seen.bot'):
-    with open('C:\\Users\\David\\Peregrine\\files\\seen.bot', 'r') as f: seen = cPickle.load(f)
-else:
-    seen = {}
+
+tfw = load_data('C:\\Users\\David\\Peregrine\\files\\tfw.bot')
+seen = load_data('C:\\Users\\David\\Peregrine\\files\\seen.bot')
 
 
 
@@ -144,22 +139,13 @@ class RepeatingTimer:
 
 
 def checkup():
-    if os.path.exists('C:\\Users\\David\\Peregrine\\files\\tfw.bot'):
-        with open('C:\\Users\\David\\Peregrine\\files\\tfw.bot', 'r') as f: tfwo = cPickle.load(f)
-    else:
-        tfwo = {}
+    tfwo = load_data('C:\\Users\\David\\Peregrine\\files\\tfw.bot')
     if not tfwo == tfw:
-        f=open("C:\\Users\\David\\Peregrine\\files\\tfw.bot", "w")
-        cPickle.dump(tfw, f)
-    if os.path.exists('C:\\Users\\David\\Peregrine\\files\\seen.bot'):
-        with open('C:\\Users\\David\\Peregrine\\files\\seen.bot', 'r') as f: seeno = cPickle.load(f)
-    else:
-        seeno = {}
+        save_data("C:\\Users\\David\\Peregrine\\files\\tfw.bot", tfw)
+        
+    seeno = load_data('C:\\Users\\David\\Peregrine\\files\\seen.bot')
     if not seeno == seen:
-        f=open("C:\\Users\\David\\Peregrine\\files\\seen.bot", "w")
-        cPickle.dump(seen, f)
-        f.close()
-        del f
+        save_data("C:\\Users\\David\\Peregrine\\files\\seen.bot", seen)
 
 
 
