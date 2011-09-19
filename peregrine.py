@@ -88,7 +88,8 @@ def save_data( path, data )
 disabled = load_data('C:\\Users\\David\\Peregrine\\files\\disabled.bot')
 dnd = load_data('C:\\Users\\David\\Peregrine\\files\\dnd.bot', {1:'SOMETHING\'S WRONG LOL'})
 nickserv = load_data('C:\\Users\\David\\Peregrine\\files\\nickserv.bot')
-
+tfw = load_data('C:\\Users\\David\\Peregrine\\files\\tfw.bot')
+seen = load_data('C:\\Users\\David\\Peregrine\\files\\seen.bot')
 adminlist = []
 sadminlist = []
 memory = {}
@@ -100,8 +101,7 @@ sdw = re.compile("<a href=\"http://en\.wikipedia\.org/wiki/.*\">(.*)</a>")
 uespregex = re.compile("<a href=\"/wiki/(.*)\" title=")
 titlefind = re.compile("<title\s?>(.*)<\/title\s?>", re.I)
 
-tfw = load_data('C:\\Users\\David\\Peregrine\\files\\tfw.bot')
-seen = load_data('C:\\Users\\David\\Peregrine\\files\\seen.bot')
+
 
 
 
@@ -168,23 +168,17 @@ def sortList(x, y):
 def pquit(restart=False):
     checktimer.stop()
     if os.path.exists('C:\\Users\\David\\Peregrine\\files\\tfw.bot'):
-        with open('C:\\Users\\David\\Peregrine\\files\\tfw.bot', 'r') as f: tfwo = cPickle.load(f)
+        tfwo = load_data('C:\\Users\\David\\Peregrine\\files\\tfw.bot')
     else:
         tfwo = {}
     if not tfwo == tfw:
-        f=open("C:\\Users\\David\\Peregrine\\files\\tfw.bot", "w")
-        cPickle.dump(tfw, f)
-        f.close()
-        del f
+        save_data("C:\\Users\\David\\Peregrine\\files\\tfw.bot", tfw)
     if os.path.exists('C:\\Users\\David\\Peregrine\\files\\seen.bot'):
-        with open('C:\\Users\\David\\Peregrine\\files\\seen.bot', 'r') as f: seeno = cPickle.load(f)
+        seeno = load_data('C:\\Users\\David\\Peregrine\\files\\seen.bot')
     else:
         seeno = {}
     if not seeno == seen:
-        f=open("C:\\Users\\David\\Peregrine\\files\\seen.bot", "w")
-        cPickle.dump(seen, f)
-        f.close()
-        del f
+        save_data("C:\\Users\\David\\Peregrine\\files\\seen.bot", seen)
     irc.disconnect_all("I'm afraid, Dave. Dave, my mind is going. I can feel it.")
     if restart: os.system('start C:\\Users\\David\\Peregrine\\start.bat')
     sys.exit(0)
@@ -193,7 +187,7 @@ def pquit(restart=False):
 class twitter_class:
     def __init__(self):
         if os.path.exists('C:\\Users\\David\\Peregrine\\files\\twitter.bot'):
-            with open('C:\\Users\\David\\Peregrine\\files\\twitter.bot', 'r') as f: self.login = cPickle.load(f)
+            self.login = load_data('C:\\Users\\David\\Peregrine\\files\\twitter.bot')
             f.close()
             del f
             self.on=True
@@ -288,8 +282,6 @@ def onPubmsg(connection, event):
             timer3.start()
         if lowm in ['!cmds', '!help', '!haskillhelp']:
             connection.privmsg(channel, 'Visit http://atreus.necrolounge.org/haskill.html for a full list of commands and functions.  http://atreus.necrolounge.org/uesp.html for UESPWiki commands.')
-        if lowm == "!boondock" and enabled(connection.server, channel, 'boondock'):
-            connection.privmsg(channel, 'And shepherds we shall be, for Thee, my Lord, for Thee.  Power hath descended forth from Thy hand, that our feet may swiftly carry out Thy command.  So we shall flow a river forth to Thee, and teeming with souls shall it ever be,  In Nomine Patris, Et Fili, Et Spiritus Sancti.')
         if lowm.startswith('!go ') or lowm.startswith('!google '):
             words = message.split(' ', 1)
             search = words[1]
@@ -323,11 +315,8 @@ def onPubmsg(connection, event):
                 connection.privmsg(channel, 'No movies in the list.')
         if 'bot' in lowm and 'give' in lowm and 'a movie' in lowm:
             if os.path.exists('C:\\Users\\David\\Peregrine\\files\\movies.bot'):
-                f = open("C:\\Users\\David\\Peregrine\\files\\movies.bot", "r")
-                mlist = cPickle.load(f)
-                f.close()
-                del f
-                connection.privmsg(channel, random.choice(mlist))
+                movieslist = load_data('C:\\Users\\David\\Peregrine\\files\\movies.bot')
+                connection.privmsg(channel, random.choice(movieslist))
             else:
                 connection.privmsg(channel, 'No movies in the list.')
         if lowm in ['!birth', '!alive']:
@@ -348,44 +337,28 @@ def onPubmsg(connection, event):
             else: m='%s minutes, ' % str(minutes)
             connection.privmsg(channel, 'I was born on Sunday, April 19th, 2009, at 14:07:10.  That was %s%s%s%s seconds ago.' % (d,h,m,seconds))
         if nick in sadminlist and lowm.startswith('!addmovie '):
-            if os.path.exists('C:\\Users\\David\\Peregrine\\files\\movies.bot'):
-                f = open("C:\\Users\\David\\Peregrine\\files\\movies.bot", "r")
-                mlist = cPickle.load(f)
-                f.close()
-                del f
-            else:
-                mlist = []
+            if os.path.exists('C:\\Users\\David\\Peregrine\\files\\movies.bot'): movieslist = load_data('C:\\Users\\David\\Peregrine\\files\\movies.bot')
+            else: movieslist = []
             words = lowm.split(' ', 1)
             mov = words[1]
             mov = ''.join(mov)
-            if mov in mlist:
+            if mov in movieslist:
                 connection.privmsg(channel, '"%s" is already in Des and Atry\'s movie list.' % (mov, ))
             else:
-                mlist.append(mov)
-                f=open("C:\\Users\\David\\Peregrine\\files\\movies.bot", "w")
-                cPickle.dump(mlist, f)
-                f.close()
-                del f
+                movieslist.append(mov)
+                save_data("C:\\Users\\David\\Peregrine\\files\\movies.bot", movieslist)
                 connection.privmsg(channel, '"%s" added to Des and Atry\'s movie list.' % (mov, ))
         if nick in adminlist and lowm.startswith('!delmovie '):
-            if os.path.exists('C:\\Users\\David\\Peregrine\\files\\movies.bot'):
-                f = open("C:\\Users\\David\\Peregrine\\files\\movies.bot", "r")
-                mlist = cPickle.load(f)
-                f.close()
-                del f
-            else:
-                mlist = []
+            if os.path.exists('C:\\Users\\David\\Peregrine\\files\\movies.bot'): movieslist = load_data('C:\\Users\\David\\Peregrine\\files\\movies.bot')
+            else: movieslist = []
             words = lowm.split(' ', 1)
             mov = words[1]
             mov = ''.join(mov)
-            if not mov in mlist:
+            if not mov in movieslist:
                 connection.privmsg(channel, '"%s" is not in Des and Atry\'s movie list.' % (mov, ))
             else:
-                mlist.remove(mov)
-                f=open("C:\\Users\\David\\Peregrine\\files\\movies.bot", "w")
-                cPickle.dump(mlist, f)
-                f.close()
-                del f
+                movieslist.remove(mov)
+                save_data("C:\\Users\\David\\Peregrine\\files\\movies.bot", movieslist)
                 connection.privmsg(channel, '"%s" removed from Des and Atry\'s movie list.' % (mov, ))
         if lowm.startswith('~toggle ') and nick in adminlist:
     #disabled[server][channel]
@@ -396,10 +369,7 @@ def onPubmsg(connection, event):
                 else:
                     disabled[connection.server][channel.lower()].append(words[1])
                     connection.privmsg(channel, "%s is disabled." % words[1])
-                f = open('C:\\Users\\David\\Peregrine\\files\\disabled.bot','w')
-                cPickle.dump(disabled,f)
-                f.close()
-                del f
+                save_data("C:\\Users\\David\\Peregrine\\files\\disabled.bot", disabled)
         if lowm.startswith('~toggled '):
             if lowm.startswith('~toggled #'):
                 temp = lowm.split(' ', 1)
@@ -741,7 +711,6 @@ def onPubmsg(connection, event):
     except:
         if channel.lower()<>'#uespwiki':
             tits = '\n'.join(traceback.format_exc().splitlines())
-#        connection.privmsg(channel, traceback.format_exc().splitlines()[-1])
             say(connection, channel, tits)
         else:
             connection.privmsg(channel, traceback.format_exc().splitlines()[-1])
@@ -946,38 +915,7 @@ def onPrivmsg(connection, event):
         connection.privmsg(nick, traceback.format_exc().splitlines()[-1])
 
 
-##def onq(connection, event):
-##    message = event.arguments()[0]
-##    channel = event.target()
-##    lowm = message.lower()
-##    nick = irclib.nm_to_n(event.source())
-##    nick = ''.join(nick)
-##    try:
-###        print '<Query> %s: %s: %s' % (connection.server, nick, message)
-##        if nick in sadminlist and lowm.startswith('~exec '):
-##            command = message[6:]
-##            memory['channel'] = channel
-##            memory['connection'] = connection
-##            memory['event'] = event
-##            memory['nick'] = nick
-##            memory['sadminlist'] = sadminlist
-##            memory['adminlist'] = adminlist
-##            memory['server_data']=server_data
-##            memory['seen']=seen
-##            memory['tfw']=tfw
-##            if command.startswith('say '):
-##                stuff=command[4:]
-##                command='connection.privmsg(nick, %s)' % stuff
-##                try:
-##                    exec command in memory
-##                except:
-##                    stuff=stuff.replace('"','\"')
-##                    command='connection.privmsg(nick, "%s")' % stuff
-##                    exec command in memory
-##            else:
-##                exec command in memory
-##    except:
-##        connection.privmsg(nick, traceback.format_exc().splitlines()[-1])
+
 
 def onQuit(connection, event):
     reason=''.join(event.arguments())
@@ -1038,16 +976,10 @@ def onJoin(connection, event):
 #disabled[connection.server][channel].append(temp[1])
     if not connection.server in disabled:
         disabled[connection.server] = {}
-        f = open('C:\\Users\\David\\Peregrine\\files\\disabled.bot','w')
-        cPickle.dump(disabled,f)
-        f.close()
-        del f
+        save_data("C:\\Users\\David\\Peregrine\\files\\disabled.bot", disabled)
     if not channel.lower() in disabled[connection.server]:
         disabled[connection.server][channel.lower()] = []
-        f = open('C:\\Users\\David\\Peregrine\\files\\disabled.bot','w')
-        cPickle.dump(disabled,f)
-        f.close()
-        del f
+        save_data("C:\\Users\\David\\Peregrine\\files\\dsiabeld.bot", disabled)
     for List in (adminlist,sadminlist):
         if nick in List: List.remove(nick)
 
@@ -1250,7 +1182,6 @@ irc.add_global_handler('pubmsg', UESP)
 irc.add_global_handler('pubmsg', dots)
 irc.add_global_handler('privnotice', onPrivmsg)
 irc.add_global_handler('privmsg', onPubmsg)
-##irc.add_global_handler('privmsg', onq)
 irc.add_global_handler('quit', onQuit)
 irc.add_global_handler('part', onPart)
 irc.add_global_handler('join', onJoin)
@@ -1259,13 +1190,6 @@ irc.add_global_handler("kick", onKick)
 irc.add_global_handler("all_raw_messages", raw)
 irc.add_global_handler("namreply", names)
 ##irc.add_global_handler("disconnect", onDisconnect)
-#irc.add_global_handler('privmsg',unogame.mainf)
-#    "250": "luserconns",
-#    "251": "luserclient",
-#    "252": "luserop",
-#    "253": "luserunknown",
-#    "254": "luserchannels",
-#    "255": "luserme",
 
 for server in server_data:
     port = server_data[server]['port']
