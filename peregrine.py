@@ -188,8 +188,6 @@ class twitter_class:
     def __init__(self):
         if os.path.exists('C:\\Users\\David\\Peregrine\\files\\twitter.bot'):
             self.login = load_data('C:\\Users\\David\\Peregrine\\files\\twitter.bot')
-            f.close()
-            del f
             self.on=True
             auth = tweepy.OAuthHandler(self.login['consumer_key'], self.login['consumer_secret'])
             auth.set_access_token(self.login['access_key'], self.login['access_secret'])
