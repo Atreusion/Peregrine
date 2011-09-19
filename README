@@ -1,5 +1,5 @@
-I DON'T KNOW WHAT I'M DOING
+I guess an introduction is in order.
 
-This is supposed to be a readme.
+Hi, I'm Atreus, and this is my horribly written bot.
 
-God help us all.
+The bulk of the bot's logic is held in peregrine.py.  start.bat is used to restart him when !restart is used.
