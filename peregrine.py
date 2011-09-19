@@ -75,24 +75,18 @@ server_data = {
 
 irc = irclib.IRC()
 
-if os.path.exists('C:\\Users\\David\\Peregrine\\files\\disabled.bot'):
-    f = open("C:\\Users\\David\\Peregrine\\files\\disabled.bot", "r")
-    disabled = cPickle.load(f)
-    f.close()
-else:
-    disabled = {}
-if os.path.exists('C:\\Users\\David\\Peregrine\\files\\dnd.bot'):
-    f = open("C:\\Users\\David\\Peregrine\\files\\dnd.bot", "r")
-    dnd = cPickle.load(f)
-    f.close()
-else:
-    dnd = {1:'SOMETHING\'S WRONG LOL'}
-if os.path.exists('C:\\Users\\David\\Peregrine\\files\\nickserv.bot'):
-    f = open("C:\\Users\\David\\Peregrine\\files\\nickserv.bot", "r")
-    nickserv = cPickle.load(f)
-    f.close()
-else:
-    nickserv = {}
+def load_data( path, default={}):
+    if os.path.exists(path):
+        f = open(path, 'r')
+        data = cPickle.load(f)
+        f.close()
+        return data
+    return default
+
+disabled = load_data('C:\\Users\\David\\Peregrine\\files\\disabled.bot')
+dnd = load_data('C:\\Users\\David\\Peregrine\\files\\dnd.bot', {1:'SOMETHING\'S WRONG LOL'})
+nickserv = load_data('C:\\Users\\David\\Peregrine\\files\\nickserv.bot')
+
 adminlist = []
 sadminlist = []
 random.seed('boobies')
