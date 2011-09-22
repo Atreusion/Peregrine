@@ -106,7 +106,7 @@ titlefind = re.compile("<title\s?>(.*)<\/title\s?>", re.I)
 
 
 class RepeatingTimer:
-    """Given to Atreus by Kindari.  I think he made it."""
+    """Given to Atreus by Kindari.  I think he made it.  Example commented out below."""
     def __init__(self, delay, function, args=[], kwargs={}, repeat=-1):
         self.delay = delay
         self.function = function
@@ -181,7 +181,7 @@ def pquit(restart=False):
         save_data("C:\\Users\\David\\Peregrine\\files\\seen.bot", seen)
     irc.disconnect_all("I'm afraid, Dave. Dave, my mind is going. I can feel it.")
     if restart: os.system('start C:\\Users\\David\\Peregrine\\start.bat')
-    sys.exit(0)
+    sys.exit(0) # THIS DOESN'T WORK WHY DOESN'T THIS WORK RAEG
 
 
 class twitter_class:
@@ -672,16 +672,15 @@ def onPubmsg(connection, event):
                         tmp=[]
                         items=dnd.items()
                         for rule in items:
-                            if search in rule[1]:
+                            if search in rule[1].lower():
                                 tmp.append(rule)
-                        rule = random.choice(tmp)
-                        rule = str(rule[0]) + ': ' + rule[1]
-                        connection.privmsg(channel, rule)
-                        del tmp
+                        if tmp:        
+                            rule = random.choice(tmp)
+                            rule = str(rule[0]) + ': ' + rule[1]
+                            connection.privmsg(channel, rule)
+                            del tmp
                 else:
-                    n = random.choice(dnd.keys())
                     connection.privmsg(channel, 'SOMETHING WENT WRONG, OH SO WRONG BABY')
-                    print 'derpderpderp\n%s' % message
             else:
                 n = random.choice(dnd.keys())
                 connection.privmsg(channel, '%s: %s' % (n, dnd[n]))
@@ -700,21 +699,6 @@ def onPubmsg(connection, event):
             vend=httpget('https://itvends.com/vend.php')
             vend='vends %s.' % vend
             connection.action(channel, vend)
-##        if lowm=='!dfterm' and nick in sadminlist:
-##            os.system('"C:\Program Files\dfterm2\dfterm2.exe" --create-appdir')
-##        if lowm.startswith('!lm ') and len(words)>2:
-##            reciever = lwords[1]
-##            messager = nick
-##            message_time = strftime("%d %b %Y %H:%M:%S GMT", gmtime())
-##            if reciever in messages:messages[receiver]=[{'t':message_time, 'from':messager, 'message':' '.join(words[2:]]
-##            else: messages[receiver]=[{'t':message_time, 'from':messager, 'message':' '.join(words[2:]]
-##            connection.privmsg(channel, 'Message saved.')
-##        if lowm=='!gm' and nick.lower() in messages:
-##            messagestring=''
-##            for message_unf in messages[nick.lower()]:
-##                message_f = 'From <%s> on %s: %s' % (messages[nick.lower()]['from'], messages[nick.lower()]['t'], messages[nick.lower()][message])
-##                messagestring = message_f + '\n'
-##            say(connection, channel, messagestring)
     except:
         if channel.lower()<>'#uespwiki':
             tits = '\n'.join(traceback.format_exc().splitlines())
@@ -794,12 +778,13 @@ def dots(connection, event):
     nick = ''.join(nick)
     match = re.search("^\.+$", message, re.IGNORECASE)
     if match != None and enabled(connection.server, channel, 'dots'):
-        dots = ['Dark`Star quickly unzips his pants.', 'Rick Astley shifts uncomfortably.',
+        dots = ['Dark`Star quickly unzips his pants.', 'Rick Astley shifts uncomfortably.', 'You suddenly realize how boring this conversation is.',
         'You suddenly realize it is unnaturally quiet.', 'Desdemona ogles disconcertingly.', 'You quickly discover one of you has an erection.',
         'You hear the muffled yells of a Mac user being ignored.', 'You hear the shrill screams of an emo kid getting the sense beat into them.',
         'You suddenly realize TylerRilm is nekkid.', "Save your breath $who, you'll need it to blow up your date.", "I am $who's colon.  I get cancer.  I kill $who.",
         'Everybody points and laughs at $who.', "You enjoy the sweet smell of $who's hopes and dreams burning.", "$who and $someone, sitting in a tree...",
-        'Peregrine quickly looks up.', 'Peregrine quickly pulls his pants up.', 'Peregrine stares at the wall.', 'Peregrine runs into the nearest wall.']
+        'Peregrine quickly looks up.', 'Peregrine quickly pulls his pants up.', 'Peregrine stares at the wall.', 'Peregrine runs into the nearest wall.',
+        'Peregrine syntax errors.', 'Oh, baby.', '$who doesn\'t like $someone anymore. :(']
         args = random.choice(dots)
         args = args.replace('$who', nick)
         args = args.replace('$someone', random.choice(userlist[connection.server][channel.lower()]))
@@ -883,7 +868,7 @@ def onPrivmsg(connection, event):
         nick = ''.join(nick)
     except:
         nick = 'Atreus'
-        connection.notice(nick,'something went wrong')
+        connection.notice(nick,'something went wrong, onprivmsg')
         print traceback.format_exc()
     try:
 #        print '<Notice> %s: %s: %s' % (connection.server, nick, message)
