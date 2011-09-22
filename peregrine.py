@@ -658,7 +658,7 @@ def onPubmsg(connection, event):
                     number=int(lwords[1])
                     connection.privmsg(channel, '%s: %s' % (lwords[1], dnd[number]))
                 elif not search.isdigit():
-                    if message[4] in ['[','{','(','<'] and lwords[1][-1] in [']','}',')','>'] and lwords[1][1:-1].isdigit():
+                    if lwords[1][0] in ['[','{','(','<'] and lwords[1][-1] in [']','}',')','>'] and lwords[1][1:-1].isdigit():
                         number=int(lwords[1][5:-1])
                         iteration=1
 #                    items.sort() # not sure why i needed this.  maybe it breaks without it, LET'S FIND OUT
