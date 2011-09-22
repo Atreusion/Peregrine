@@ -672,7 +672,7 @@ def onPubmsg(connection, event):
                         tmp=[]
                         items=dnd.items()
                         for rule in items:
-                            if search in rule:
+                            if search in rule[1]:
                                 tmp.append(rule)
                         rule = random.choice(tmp)
                         rule = str(rule[0]) + ': ' + rule[1]
