@@ -659,15 +659,17 @@ def onPubmsg(connection, event):
                     connection.privmsg(channel, '%s: %s' % (lwords[1], dnd[number]))
                 elif not search.isdigit():
                     if lwords[1][0] in ['[','{','(','<'] and lwords[1][-1] in [']','}',')','>'] and lwords[1][1:-1].isdigit():
-                        number=int(lwords[1][5:-1])
-                        iteration=1
+                        number=int(lwords[1][1:-1])
+                        if number<1726:
+                            iteration=1
+                            items=dnd.items()
 #                    items.sort() # not sure why i needed this.  maybe it breaks without it, LET'S FIND OUT
-                        for rule in items:
-                            if search in rule[1].lower() and iteration==number:
-                                connection.privmsg(channel, str(rule[0]) + ': ' + rule[1])
-                                break
-                            elif search in rule[1].lower() and iteration<>number:
-                                number-=1
+                            for rule in items:
+                                if search in rule[1].lower() and iteration==number:
+                                    connection.privmsg(channel, str(rule[0]) + ': ' + rule[1])
+                                    break
+                                elif search in rule[1].lower() and iteration<>number:
+                                    number-=1
                     else:
                         tmp=[]
                         items=dnd.items()
@@ -680,7 +682,7 @@ def onPubmsg(connection, event):
                             connection.privmsg(channel, rule)
                             del tmp
                 else:
-                    connection.privmsg(channel, 'SOMETHING WENT WRONG, OH SO WRONG BABY')
+                    print 'SOMETHING WENT WRONG, OH SO WRONG BABY'
             else:
                 n = random.choice(dnd.keys())
                 connection.privmsg(channel, '%s: %s' % (n, dnd[n]))
