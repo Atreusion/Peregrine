@@ -661,6 +661,7 @@ def onPubmsg(connection, event):
                     if lwords[1][0] in ['[','{','(','<'] and lwords[1][-1] in [']','}',')','>'] and lwords[1][1:-1].isdigit():
                         number=int(lwords[1][1:-1])
                         if number<1726:
+                            search = ' '.join(lwords[2:])
                             iteration=1
                             items=dnd.items()
 #                    items.sort() # not sure why i needed this.  maybe it breaks without it, LET'S FIND OUT
