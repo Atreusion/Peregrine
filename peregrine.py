@@ -43,7 +43,7 @@ server_data = {
 'irc.chatspike.net' : {
     'port' : 6667,
     'nickname' : 'Peregrine',
-    'channels' : ['#uespwiki', '#bots', '#trspam', '#equilibrium', '#Aetherius', '#internet'],
+    'channels' : ['#uespwiki', '#bots', '#trspam', '#equilibrium', '#Aetherius'],
     'object' : None
     },
 'staticfree.foonetic.net' : {
@@ -85,6 +85,7 @@ def load_data( path, default={}):
 def save_data( path, data ):
     with open( path, 'w' ) as f: cPickle.dump(data, f)
 
+maiq=stuffz.maiq
 disabled = load_data('C:\\Users\\David\\Peregrine\\files\\disabled.bot')
 dnd = load_data('C:\\Users\\David\\Peregrine\\files\\dnd.bot', {1:'SOMETHING\'S WRONG LOL'})
 nickserv = load_data('C:\\Users\\David\\Peregrine\\files\\nickserv.bot')
@@ -142,7 +143,7 @@ def checkup():
     tfwo = load_data('C:\\Users\\David\\Peregrine\\files\\tfw.bot')
     if not tfwo == tfw:
         save_data("C:\\Users\\David\\Peregrine\\files\\tfw.bot", tfw)
-        
+
     seeno = load_data('C:\\Users\\David\\Peregrine\\files\\seen.bot')
     if not seeno == seen:
         save_data("C:\\Users\\David\\Peregrine\\files\\seen.bot", seen)
@@ -677,7 +678,7 @@ def onPubmsg(connection, event):
                         for rule in items:
                             if search in rule[1].lower():
                                 tmp.append(rule)
-                        if tmp:        
+                        if tmp:
                             rule = random.choice(tmp)
                             rule = str(rule[0]) + ': ' + rule[1]
                             connection.privmsg(channel, rule)
@@ -702,6 +703,9 @@ def onPubmsg(connection, event):
             vend=httpget('https://itvends.com/vend.php')
             vend='vends %s.' % vend
             connection.action(channel, vend)
+        if lowm=='!maiq' or lowm=="!m'aiq":
+            choice = random.choice(maiq)
+            connection.privmsg(channel, choice)
     except:
         if channel.lower()<>'#uespwiki':
             tits = '\n'.join(traceback.format_exc().splitlines())
@@ -966,8 +970,6 @@ def onJoin(connection, event):
         seen[nick.lower()]['action']=action
     else:
         seen[nick.lower()]={'secs':time.time(),'action':action,'lines':0,'chars':0}#,'lols':0}
-    if (event.source().endswith('.bltmmd.east.verizon.net') or event.source().endswith('.mibbit.com') or event.source().endswith('.balt.east.verizon.net')) and nick.startswith('Desde'):
-        connection.privmsg(channel, 'Atreus!  Guess who\'s on!')
 #disabled[connection.server][channel].append(temp[1])
     if not connection.server in disabled:
         disabled[connection.server] = {}
