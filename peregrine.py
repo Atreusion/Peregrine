@@ -605,7 +605,7 @@ def onPubmsg(connection, event):
                 connection.action(channel, 'wags his tail.')
             else:
                 connection.action(channel, 'gives a treat to ' + treated)
-        if lowm.startswith('!blame ') and len(lwords)>1:
+        if (lowm.startswith('!blame ') or lowm.startswith('!blames ')) and len(lwords)>1:
             blamed=' '.join(words[1:])
             if blamed.lower() == connection.get_nickname().lower():
                 connection.action(channel, 'hangs head in shame.')
