@@ -606,11 +606,11 @@ def onPubmsg(connection, event):
             else:
                 connection.action(channel, 'gives a treat to ' + treated)
         if lowm.startswith('!blame ') and len(lwords)>1:
-           blamed=' '.join(words[1:])
+            blamed=' '.join(words[1:])
             if blamed.lower() == connection.get_nickname().lower():
-                 connection.action(channel, 'hangs head in shame.')
+                connection.action(channel, 'hangs head in shame.')
             else:
-                 connection.action(channel, 'blames ' + blamed)
+                connection.action(channel, 'blames ' + blamed)
 ##        if lowm.startswith('!oldest ') and len(lwords)==2:
 ##            if lwords[1].isdigit():
 ##                num=int(lwords[1])
