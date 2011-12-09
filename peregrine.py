@@ -87,7 +87,7 @@ def save_data( path, data ):
 
 maiq=stuffz.maiq
 disabled = load_data('C:\\Users\\David\\Peregrine\\files\\disabled.bot')
-dnd = load_data('C:\\Users\\David\\Peregrine\\files\\dnd.bot', {1:'SOMETHING\'S WRONG LOL'})
+dnd = load_data('C:\\Users\\David\\Peregrine\\files\\dnd.bot', {1:"SOMETHING'S WRONG LOL"})
 nickserv = load_data('C:\\Users\\David\\Peregrine\\files\\nickserv.bot')
 tfw = load_data('C:\\Users\\David\\Peregrine\\files\\tfw.bot')
 seen = load_data('C:\\Users\\David\\Peregrine\\files\\seen.bot')
@@ -168,16 +168,12 @@ def sortList(x, y):
 
 def pquit(restart=False):
     checktimer.stop()
-    if os.path.exists('C:\\Users\\David\\Peregrine\\files\\tfw.bot'):
-        tfwo = load_data('C:\\Users\\David\\Peregrine\\files\\tfw.bot')
-    else:
-        tfwo = {}
+    twitter.timer.stop()
+    twitter.on=False
+    tfwo = load_data('C:\\Users\\David\\Peregrine\\files\\tfw.bot')
     if not tfwo == tfw:
         save_data("C:\\Users\\David\\Peregrine\\files\\tfw.bot", tfw)
-    if os.path.exists('C:\\Users\\David\\Peregrine\\files\\seen.bot'):
-        seeno = load_data('C:\\Users\\David\\Peregrine\\files\\seen.bot')
-    else:
-        seeno = {}
+    seeno = load_data('C:\\Users\\David\\Peregrine\\files\\seen.bot')
     if not seeno == seen:
         save_data("C:\\Users\\David\\Peregrine\\files\\seen.bot", seen)
     irc.disconnect_all("I'm afraid, Dave. Dave, my mind is going. I can feel it.")
@@ -1178,6 +1174,16 @@ def httpget(url,data=None):
     except:
         pass
 
+def onDisconnect(connection, event):
+##    print event.source() #irc.nexuswar.com
+##    print event.target() #nuthin'
+##    print event.arguments() #['reason'] i.e. Connection reset by peer
+    reason=event.arguments()[0]
+    server=event.source()
+    del sadminlist
+    del adminlist
+    print 'Disconnected from ' + server + ' with "' + reason + '"!'
+
 
 irc.add_global_handler('welcome', onWelcome)
 irc.add_global_handler('pubmsg', onPubmsg)
@@ -1192,7 +1198,28 @@ irc.add_global_handler("nick", nick)
 irc.add_global_handler("kick", onKick)
 irc.add_global_handler("all_raw_messages", raw)
 irc.add_global_handler("namreply", names)
-##irc.add_global_handler("disconnect", onDisconnect)
+irc.add_global_handler("disconnect", onDisconnect)
+
+
+
+def ping(server_object, server):
+    try:
+        server_object.ping(server)
+    except:
+        #server_object.disconnect() <-- don't need this because the failed ping calls onDisconnect!
+        port = server_data[server]['port']
+        nickname = server_data[server]['nickname']
+        server_object = irc.server()
+        try:
+            try:
+                #3 try statements makes me feel dirty and kinky
+                server_object.connect(server, port, nickname, ircname="Peregrine.  Owned by Atreus.")
+            except:
+                server_object.connect(server, port, nickname)
+        except:
+            print 'Unable to connect to %s (ping)' % server
+    irc.execute_delayed(300, ping, (server_object, server))
+
 
 for server in server_data:
     port = server_data[server]['port']
@@ -1205,6 +1232,9 @@ for server in server_data:
             server_object.connect(server, port, nickname)
     except:
         print 'Unable to connect to %s' % server
+    server_object.temp_timer = threading.Timer(300, ping, args=[server_object, server])
+    server_object.temp_timer.start()
+
 
 
 
