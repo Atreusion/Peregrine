@@ -102,10 +102,6 @@ sdw = re.compile("<a href=\"http://en\.wikipedia\.org/wiki/.*\">(.*)</a>")
 uespregex = re.compile("<a href=\"/wiki/(.*)\" title=")
 titlefind = re.compile("<title\s?>(.*)<\/title\s?>", re.I)
 
-
-
-
-
 class RepeatingTimer:
     """Given to Atreus by Kindari.  I think he made it.  Example commented out below."""
     def __init__(self, delay, function, args=[], kwargs={}, repeat=-1):
@@ -129,15 +125,9 @@ class RepeatingTimer:
             self.repeat -= 1
             self.start()
 
-
-
 #def test(): print 'test'
 #timer = RepeatingTimer(5, test, repeat=10) // 5 being the seconds between each command, and 10 being the repeats.  if -1 is repeat, infinite repeat
 #timer.start()
-
-
-
-
 
 def checkup():
     tfwo = load_data('C:\\Users\\David\\Peregrine\\files\\tfw.bot')
@@ -147,9 +137,6 @@ def checkup():
     seeno = load_data('C:\\Users\\David\\Peregrine\\files\\seen.bot')
     if not seeno == seen:
         save_data("C:\\Users\\David\\Peregrine\\files\\seen.bot", seen)
-
-
-
 
 checktimer = RepeatingTimer(30, checkup, repeat=-1) # 5 being the seconds between each command, and 10 being the repeats.  if -1 is repeat, infinite repeat
 checktimer.start()
@@ -178,7 +165,7 @@ def pquit(restart=False):
         save_data("C:\\Users\\David\\Peregrine\\files\\seen.bot", seen)
     irc.disconnect_all("I'm afraid, Dave. Dave, my mind is going. I can feel it.")
     if restart: os.system('start C:\\Users\\David\\Peregrine\\start.bat')
-    sys.exit(0) # THIS DOESN'T WORK WHY DOESN'T THIS WORK RAEG
+    sys.exit(0)
 
 
 class twitter_class:
@@ -248,6 +235,7 @@ def onPubmsg(connection, event):
     words = message.split()
     lwords = lowm.split()
     if channel==connection.get_nickname(): channel=nick
+    #jercos can suck a dick :V
     try:
         action='speaking in %s' % channel
         if nick.lower() in seen:
@@ -262,7 +250,7 @@ def onPubmsg(connection, event):
         else:
             seen[nick.lower()]={'secs':time.time(),'action':action,'lines':1,'chars':len(message)}#,'lols':message.lower().count('lol')}
         if lowm == "!version":
-            connection.privmsg(channel, 'I am version .82g :( (You act like this bot will ever be worthy of a version 1)')
+            connection.privmsg(channel, 'I am version .83r :( (You act like this bot will ever be worthy of a version 1)')
         if lowm.startswith("!wp "):
             args = message[4:]
             args=urllib.urlencode({'' :args})
@@ -294,26 +282,6 @@ def onPubmsg(connection, event):
         if lowm == "!pastebin" or lowm == "!pb":
             person = filter(str.isalnum, nick)
             connection.privmsg(channel, 'http://atreus.pastebin.com http://pb.necrolounge.org/ http://%s.pastebin.com' % (person, ))
-        if nick in sadminlist and lowm=='!movielist':
-            if os.path.exists('C:\\Users\\David\\Peregrine\\files\\movies.bot'):
-                f = open("C:\\Users\\David\\Peregrine\\files\\movies.bot", "r")
-                mlist = cPickle.load(f)
-                f.close()
-                del f
-                total='Movies: %s' % ', '.join(mlist)
-                if len(total)>200:
-                    total='%s%s%s' % (total[:199],'\n',total[200:])
-                if len(total)>402:
-                    total='%s%s%s ... continued' % (total[:401],'\n',total[402:])
-                say(connection, channel, total)
-            else:
-                connection.privmsg(channel, 'No movies in the list.')
-        if 'bot' in lowm and 'give' in lowm and 'a movie' in lowm:
-            if os.path.exists('C:\\Users\\David\\Peregrine\\files\\movies.bot'):
-                movieslist = load_data('C:\\Users\\David\\Peregrine\\files\\movies.bot')
-                connection.privmsg(channel, random.choice(movieslist))
-            else:
-                connection.privmsg(channel, 'No movies in the list.')
         if lowm in ['!birth', '!alive']:
             #14:07:10 -- Sun Apr 19 2009 --
             s=1240150030
@@ -331,30 +299,6 @@ def onPubmsg(connection, event):
             elif minutes==1: m='%s minute, ' % str(minutes)
             else: m='%s minutes, ' % str(minutes)
             connection.privmsg(channel, 'I was born on Sunday, April 19th, 2009, at 14:07:10.  That was %s%s%s%s seconds ago.' % (d,h,m,seconds))
-        if nick in sadminlist and lowm.startswith('!addmovie '):
-            if os.path.exists('C:\\Users\\David\\Peregrine\\files\\movies.bot'): movieslist = load_data('C:\\Users\\David\\Peregrine\\files\\movies.bot')
-            else: movieslist = []
-            words = lowm.split(' ', 1)
-            mov = words[1]
-            mov = ''.join(mov)
-            if mov in movieslist:
-                connection.privmsg(channel, '"%s" is already in Des and Atry\'s movie list.' % (mov, ))
-            else:
-                movieslist.append(mov)
-                save_data("C:\\Users\\David\\Peregrine\\files\\movies.bot", movieslist)
-                connection.privmsg(channel, '"%s" added to Des and Atry\'s movie list.' % (mov, ))
-        if nick in adminlist and lowm.startswith('!delmovie '):
-            if os.path.exists('C:\\Users\\David\\Peregrine\\files\\movies.bot'): movieslist = load_data('C:\\Users\\David\\Peregrine\\files\\movies.bot')
-            else: movieslist = []
-            words = lowm.split(' ', 1)
-            mov = words[1]
-            mov = ''.join(mov)
-            if not mov in movieslist:
-                connection.privmsg(channel, '"%s" is not in Des and Atry\'s movie list.' % (mov, ))
-            else:
-                movieslist.remove(mov)
-                save_data("C:\\Users\\David\\Peregrine\\files\\movies.bot", movieslist)
-                connection.privmsg(channel, '"%s" removed from Des and Atry\'s movie list.' % (mov, ))
         if lowm.startswith('~toggle ') and nick in adminlist:
     #disabled[server][channel]
             if len(words) == 2:
@@ -516,21 +460,18 @@ def onPubmsg(connection, event):
         if lowm=='!sandvich':
             stuff = "NOM NOMNOM... OM NOM\n%s" % random.choice(sandvich)
             say(connection, channel, stuff)
-        if lowm.startswith('!content') and len(message)==9:
-            url='http://content%s.uesp.net/server-status' % message[8]
-#            try:
-            code=httpget(url)
-            uptime=code.split('Server uptime: ')[1].split('<br>')[0]
-            accesses=code.split('Total accesses: ')[1].split(' - ')[0]
-            traffic=code.split('Total Traffic: ')[1].split('<br>')[0]
-            rs=code.split('CPU load<br>\n')[1].split('<br>')[0]
-            servers=code.split('B/request<br>\n\n')[1].split('\n')[0]
-            load=code.split('CPU load<br>')[0].split()[-1]
-            connection.privmsg(channel, 'Uptime: %s.  Load: %s CPU.  Accesses: %s.  Traffic: %s.  Bandwidth: %s.  Servers: %s' % (uptime,load,accesses,traffic,rs,servers))
-            del code
-        if lowm.startswith('~aquit') and nick in sadminlist:
-            for each in server_data.values(): each['object'].quit((len(words)>1 and message[7:]) or 'Peregrine shutting down.')
-            print "'%s' used by %s" % (message,nick)
+#        if lowm.startswith('!content') and len(message)==9:
+#            url='http://content%s.uesp.net/server-status' % message[8]
+##            try:
+#            code=httpget(url)
+#            uptime=code.split('Server uptime: ')[1].split('<br>')[0]
+#            accesses=code.split('Total accesses: ')[1].split(' - ')[0]
+#            traffic=code.split('Total Traffic: ')[1].split('<br>')[0]
+#            rs=code.split('CPU load<br>\n')[1].split('<br>')[0]
+#            servers=code.split('B/request<br>\n\n')[1].split('\n')[0]
+#            load=code.split('CPU load<br>')[0].split()[-1]
+#            connection.privmsg(channel, 'Uptime: %s.  Load: %s CPU.  Accesses: %s.  Traffic: %s.  Bandwidth: %s.  Servers: %s' % (uptime,load,accesses,traffic,rs,servers))
+#            del code
         if lowm=='!random':
             code=httpget('http://en.wikipedia.org/wiki/Special:Random')
             pagename=code.split('Retrieved from "<a href="')[1].split('">')[0]
@@ -607,21 +548,6 @@ def onPubmsg(connection, event):
                 connection.action(channel, 'hangs head in shame.')
             else:
                 connection.action(channel, 'blames ' + blamed)
-##        if lowm.startswith('!oldest ') and len(lwords)==2:
-##            if lwords[1].isdigit():
-##                num=int(lwords[1])
-##                if num<21:
-##                    d={}
-##                    for name in seen:
-##                        d[seen[name].values()[1]]=name
-##                    sseen=sorted(d)[:num]
-##                    cmd=''
-##                    for timex in sseen:
-##                        cmd=cmd+d[timex]+', '
-##                    cmd=cmd[:-2]
-##                    connection.privmsg(channel, '%s are the oldest people seen.' % cmd)
-##                    del d
-##                    del sseen
         if lowm.startswith('~delseen ') and len(lwords)>1 and nick in adminlist:
             del seen[lowm[9:]]
             connection.privmsg(channel, '%s deleted from seen.' % lowm[9:])
@@ -764,15 +690,11 @@ def remove_dups(L):
 ##        l=[d,h,m,secs]
 ##        return l
 
-
 #>>> params = {"server":"mpilgrim", "database":"master", "uid":"sa", "pwd":"secret"}
 #>>> ["%s=%s" % (k, v) for k, v in params.items()]
 #['server=mpilgrim', 'uid=sa', 'database=master', 'pwd=secret']
 #>>> ";".join(["%s=%s" % (k, v) for k, v in params.items()])
 #'server=mpilgrim;uid=sa;database=master;pwd=secret'
-
-
-
 
 #>>> print '%(language)s has %(#)03d quote types.' % \
 #...       {'language': "Python", "#": 2}
@@ -793,7 +715,7 @@ def dots(connection, event):
         'You suddenly realize TylerRilm is nekkid.', "Save your breath $who, you'll need it to blow up your date.", "I am $who's colon.  I get cancer.  I kill $who.",
         'Everybody points and laughs at $who.', "You enjoy the sweet smell of $who's hopes and dreams burning.", "$who and $someone, sitting in a tree...",
         'Peregrine quickly looks up.', 'Peregrine quickly pulls his pants up.', 'Peregrine stares at the wall.', 'Peregrine runs into the nearest wall.',
-        'Peregrine syntax errors.', 'Oh, baby.', '$who doesn\'t like $someone anymore. :(']
+        'Peregrine syntax errors.', 'Oh, baby.', '$who doesn\'t like $someone anymore. :(', 'Peregrine blames $who for everything.', 'Peregrine blames $someone for everything.']
         args = random.choice(dots)
         args = args.replace('$who', nick)
         args = args.replace('$someone', random.choice(userlist[connection.server][channel.lower()]))
@@ -829,15 +751,15 @@ def nick_strip(s):
     return s
 
 def raw(connection, event):
-    #Bucket!bucket@irc.peeron.com PRIVMSG #bucket :Something.001832 <&Atreus> ~exec say event.arguments()
-##001832 <&Atreus> ~exec say event.arguments()
-##001833 <&Peregrine> ['~exec say event.arguments()']
-##001843 <&Atreus> ~exec say event.source()
-##001844 <&Peregrine> Atreus!Erasmus@nw-55A3C2E8.bltmmd.fios.verizon.net
-##001851 <&Atreus> ~exec say event.target()
-##001851 <&Peregrine> #stagecrew
-##001857 <&Atreus> ~exec say event.eventtype()
-##001857 <&Peregrine> pubmsg
+## Bucket!bucket@irc.peeron.com PRIVMSG #bucket :Something.
+## <&Atreus> ~exec say event.arguments()
+## <&Peregrine> ['~exec say event.arguments()']
+## <&Atreus> ~exec say event.source()
+## <&Peregrine> Atreus!Erasmus@nw-55A3C2E8.bltmmd.fios.verizon.net
+## <&Atreus> ~exec say event.target()
+## <&Peregrine> #stagecrew
+## <&Atreus> ~exec say event.eventtype()
+## <&Peregrine> pubmsg
     args = ''.join(event.arguments()).split()
     timenow = time.strftime('%X', time.localtime())
     if len(args)>2:
@@ -984,8 +906,6 @@ def onJoin(connection, event):
         if nick in List: List.remove(nick)
 
 
-
-
 def nicksplit(data): return ('!' in data and data.split('!')[0]) or data
 
 
@@ -1084,9 +1004,7 @@ def UESP(connection, event):
                     msg = msg + '%s *stuff* returns %s*stuff*\n' % (cmd, acmds[cmd])
             say(connection, nick, msg)
     except:
-#        tits = '\n'.join(traceback.format_exc().splitlines())
         connection.privmsg(channel, traceback.format_exc().splitlines()[-1])
-#        say(connection, channel, tits)
 
 def uespregextest(url2,url,connection,channel):
     print url
@@ -1160,12 +1078,11 @@ def onKick(connection,event):
         except:
             pass
 
-
 def httpget(url,data=None):
     """Returns a string that contains the source code of the url."""
     try:
         if data: data = urllib.urlencode(data)
-        headers = { 'User-Agent' : 'Mozilla/4.0 (compatible; MSIE 5.5; Windows NT)' }
+        headers = { 'User-Agent' : 'Mozilla/4.0 (compatible; MSIE 5.5; Windows NT) Peregrine/1.0' }
         request = urllib2.Request(url,data,headers)
         opener = urllib2.build_opener()
         f = opener.open(request)
