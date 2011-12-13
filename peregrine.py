@@ -52,12 +52,12 @@ server_data = {
     'channels' : ['#bots', '#boats'],
     'object' : None
     },
-'irc.deviantart.com' : {
-    'port' : 6667,
-    'nickname' : 'Peregrine',
-    'channels' : ['#bots', '#devart'],
-    'object' : None
-    },
+##'irc.deviantart.com' : {
+##    'port' : 6667,
+##    'nickname' : 'Peregrine',
+##    'channels' : ['#bots', '#devart'],
+##    'object' : None
+##    },
 'napier.subluminal.net' : {
     'port' : 6667,
     'nickname' : 'Peregrine',
@@ -922,20 +922,21 @@ def onQuit(connection, event):
     reason=''.join(event.arguments())
     nick = irclib.nm_to_n(event.source())
     nick = ''.join(nick)
-    if reason: action='quitting with: %s' % (reason)
-    else: action='quitting'
-    for channel in userlist[connection.server]:
-        if nick in userlist[connection.server][channel.lower()]:
-            userlist[connection.server][channel.lower()].remove(nick)
-    if nick.lower() in seen:
-        seen[nick.lower()]['secs']=time.time()
-        seen[nick.lower()]['action']=action
-    else:
-        seen[nick.lower()]={'secs':time.time(),'action':action,'lines':0,'chars':0}#,'lols':0}
-    if nick in adminlist:
-        adminlist.remove(nick)
-    if nick in sadminlist:
-        sadminlist.remove(nick)
+    if nick<>connection.get_nickname():
+        if reason: action='quitting with: %s' % (reason)
+        else: action='quitting'
+        for channel in userlist[connection.server]:
+            if nick in userlist[connection.server][channel.lower()]:
+                userlist[connection.server][channel.lower()].remove(nick)
+        if nick.lower() in seen:
+            seen[nick.lower()]['secs']=time.time()
+            seen[nick.lower()]['action']=action
+        else:
+            seen[nick.lower()]={'secs':time.time(),'action':action,'lines':0,'chars':0}#,'lols':0}
+        if nick in adminlist:
+            adminlist.remove(nick)
+        if nick in sadminlist:
+            sadminlist.remove(nick)
 
 def onPart(connection, event):
     channel = event.target()
@@ -1180,8 +1181,10 @@ def onDisconnect(connection, event):
 ##    print event.arguments() #['reason'] i.e. Connection reset by peer
     reason=event.arguments()[0]
     server=event.source()
-    del sadminlist
-    del adminlist
+    global sadminlist
+    global adminlist
+    sadminlist=[]
+    adminlist=[]
     print 'Disconnected from ' + server + ' with "' + reason + '"!'
 
 
