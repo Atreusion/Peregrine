@@ -29,7 +29,7 @@ import signal
 hparser = HParser()
 os.system('title Peregrine')
 getcontext().prec=10
-signal.signal( signal.SIGTERM, irc.shutdown )
+signal.signal( signal.SIGTERM, shutdown )
 
 with open('irc.pid', 'w') as f:
     f.write( str(os.getpid()) )
@@ -259,7 +259,7 @@ def onPubmsg(connection, event):
         else:
             seen[nick.lower()]={'secs':time.time(),'action':action,'lines':1,'chars':len(message)}#,'lols':message.lower().count('lol')}
         if lowm == "!version":
-            connection.privmsg(channel, 'I am version .83r :( (You act like this bot will ever be worthy of a version 1)')
+            connection.privmsg(channel, 'I am version .831k :( (You act like this bot will ever be worthy of a version 1)')
         if lowm.startswith("!wp "):
             args = message[4:]
             args=urllib.urlencode({'' :args})
@@ -602,7 +602,7 @@ def onPubmsg(connection, event):
                             search = ' '.join(lwords[2:])
                             iteration=1
                             items=dnd.items()
-#                    items.sort() # not sure why i needed this.  maybe it breaks without it, LET'S FIND OUT
+#                    items.sort() # not sure why i needed this.  maybe it breaks without it, LET'S FIND OUT # apparently it doesn't.  okiedokiethen
                             for rule in items:
                                 if search in rule[1].lower() and iteration==number:
                                     connection.privmsg(channel, str(rule[0]) + ': ' + rule[1])
