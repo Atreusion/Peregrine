@@ -25,9 +25,14 @@ from datetime import datetime
 from datetime import timedelta
 import socket
 import tweepy
+import signal
 hparser = HParser()
 os.system('title Peregrine')
 getcontext().prec=10
+signal.signal( signal.SIGTERM, irc.shutdown )
+
+with open('irc.pid', 'w') as f:
+    f.write( str(os.getpid()) )
 
 #Use with the form: mylist=truerandom.getnum(min,max,amount)
 #mylist will be a list containing the true random numbers.
@@ -58,7 +63,7 @@ server_data = {
 ##    'channels' : ['#bots', '#devart'],
 ##    'object' : None
 ##    },
-'napier.subluminal.net' : {
+'mindjail.subluminal.net' : {
     'port' : 6667,
     'nickname' : 'Peregrine',
     'channels' : ['#bots', '#boats'],
@@ -74,7 +79,8 @@ server_data = {
 
 irc = irclib.IRC()
 
-def load_data( path, default={}):
+def load_data( filename, default={}):
+    path = os.sep.join([os.getcwd(), 'files', filename])
     if os.path.exists(path):
         f = open(path, 'r')
         data = cPickle.load(f)
@@ -82,21 +88,23 @@ def load_data( path, default={}):
         return data
     return default
 
-def save_data( path, data ):
+def save_data( filename, data ):
+    path = os.sep.join([os.getcwd(), 'files', filename])
     with open( path, 'w' ) as f: cPickle.dump(data, f)
 
 maiq=stuffz.maiq
-disabled = load_data('C:\\Users\\David\\Peregrine\\files\\disabled.bot')
-dnd = load_data('C:\\Users\\David\\Peregrine\\files\\dnd.bot', {1:"SOMETHING'S WRONG LOL"})
-nickserv = load_data('C:\\Users\\David\\Peregrine\\files\\nickserv.bot')
-tfw = load_data('C:\\Users\\David\\Peregrine\\files\\tfw.bot')
-seen = load_data('C:\\Users\\David\\Peregrine\\files\\seen.bot')
+disabled = load_data('disabled.bot')
+dnd = load_data('dnd.bot', {1:"SOMETHING'S WRONG LOL"})
+nickserv = load_data('nickserv.bot')
+tfw = load_data('tfw.bot')
+seen = load_data('seen.bot')
 adminlist = []
 sadminlist = []
 memory = {}
 niven = stuffz.niven
 sandvich = stuffz.sandvich
 userlist={}
+vendlist=[]
 #dnd=stuffz.dnd
 sdw = re.compile("<a href=\"http://en\.wikipedia\.org/wiki/.*\">(.*)</a>")
 uespregex = re.compile("<a href=\"/wiki/(.*)\" title=")
@@ -130,13 +138,13 @@ class RepeatingTimer:
 #timer.start()
 
 def checkup():
-    tfwo = load_data('C:\\Users\\David\\Peregrine\\files\\tfw.bot')
+    tfwo = load_data('tfw.bot')
     if not tfwo == tfw:
-        save_data("C:\\Users\\David\\Peregrine\\files\\tfw.bot", tfw)
+        save_data("tfw.bot", tfw)
 
-    seeno = load_data('C:\\Users\\David\\Peregrine\\files\\seen.bot')
+    seeno = load_data('seen.bot')
     if not seeno == seen:
-        save_data("C:\\Users\\David\\Peregrine\\files\\seen.bot", seen)
+        save_data("seen.bot", seen)
 
 checktimer = RepeatingTimer(30, checkup, repeat=-1) # 5 being the seconds between each command, and 10 being the repeats.  if -1 is repeat, infinite repeat
 checktimer.start()
@@ -153,25 +161,26 @@ def sortList(x, y):
 
 
 
-def pquit(restart=False):
+def shutdown():
     checktimer.stop()
     twitter.timer.stop()
     twitter.on=False
-    tfwo = load_data('C:\\Users\\David\\Peregrine\\files\\tfw.bot')
+    tfwo = load_data('tfw.bot')
     if not tfwo == tfw:
-        save_data("C:\\Users\\David\\Peregrine\\files\\tfw.bot", tfw)
-    seeno = load_data('C:\\Users\\David\\Peregrine\\files\\seen.bot')
+        save_data("tfw.bot", tfw)
+    seeno = load_data('seen.bot')
     if not seeno == seen:
-        save_data("C:\\Users\\David\\Peregrine\\files\\seen.bot", seen)
+        save_data("seen.bot", seen)
     irc.disconnect_all("I'm afraid, Dave. Dave, my mind is going. I can feel it.")
-    if restart: os.system('start C:\\Users\\David\\Peregrine\\start.bat')
+##    if restart: os.system('start C:\\Users\\David\\Peregrine\\start.bat')
+    os.remove('irc.pid')
     sys.exit(0)
 
 
 class twitter_class:
     def __init__(self):
-        if os.path.exists('C:\\Users\\David\\Peregrine\\files\\twitter.bot'):
-            self.login = load_data('C:\\Users\\David\\Peregrine\\files\\twitter.bot')
+        if os.path.exists(os.sep.join([os.getcwd(), 'files', 'twitter.bot'])):
+            self.login = load_data('twitter.bot')
             self.on=True
             auth = tweepy.OAuthHandler(self.login['consumer_key'], self.login['consumer_secret'])
             auth.set_access_token(self.login['access_key'], self.login['access_secret'])
@@ -308,7 +317,7 @@ def onPubmsg(connection, event):
                 else:
                     disabled[connection.server][channel.lower()].append(words[1])
                     connection.privmsg(channel, "%s is disabled." % words[1])
-                save_data("C:\\Users\\David\\Peregrine\\files\\disabled.bot", disabled)
+                save_data("disabled.bot", disabled)
         if lowm.startswith('~toggled '):
             if lowm.startswith('~toggled #'):
                 temp = lowm.split(' ', 1)
@@ -628,7 +637,9 @@ def onPubmsg(connection, event):
             else:
                 connection.privmsg(channel, 'Sorry, but the OAuth credentials have disappeared.  Bug Atreus to fix this.')
         if lowm=='!vend':
-            vend=httpget('https://itvends.com/vend.php')
+            global vendlist
+            if not vendlist: vendlist = httpget('https://itvends.com/vend?action=vend&format=text&count=10').split('\n')
+            vend=vendlist.pop()
             vend='vends %s.' % vend
             connection.action(channel, vend)
         if lowm=='!maiq' or lowm=="!m'aiq":
@@ -644,6 +655,7 @@ def onPubmsg(connection, event):
         pquit()
     if nick in sadminlist and lowm=='!restart':
         pquit(restart=True)
+
 
 def difs(a,b,prec=None):
     """Returns the (string) value of a-b, to 10 decimal places unless prec (precision) is specified."""
@@ -710,7 +722,7 @@ def dots(connection, event):
     match = re.search("^\.+$", message, re.IGNORECASE)
     if match != None and enabled(connection.server, channel, 'dots'):
         dots = ['Dark`Star quickly unzips his pants.', 'Rick Astley shifts uncomfortably.', 'You suddenly realize how boring this conversation is.',
-        'You suddenly realize it is unnaturally quiet.', 'Desdemona ogles disconcertingly.', 'You quickly discover one of you has an erection.',
+        'You suddenly realize it is unnaturally quiet.', 'Hannerz ogles disconcertingly.', 'You quickly discover one of you has an erection.',
         'You hear the muffled yells of a Mac user being ignored.', 'You hear the shrill screams of an emo kid getting the sense beat into them.',
         'You suddenly realize TylerRilm is nekkid.', "Save your breath $who, you'll need it to blow up your date.", "I am $who's colon.  I get cancer.  I kill $who.",
         'Everybody points and laughs at $who.', "You enjoy the sweet smell of $who's hopes and dreams burning.", "$who and $someone, sitting in a tree...",
@@ -898,10 +910,10 @@ def onJoin(connection, event):
 #disabled[connection.server][channel].append(temp[1])
     if not connection.server in disabled:
         disabled[connection.server] = {}
-        save_data("C:\\Users\\David\\Peregrine\\files\\disabled.bot", disabled)
+        save_data("disabled.bot", disabled)
     if not channel.lower() in disabled[connection.server]:
         disabled[connection.server][channel.lower()] = []
-        save_data("C:\\Users\\David\\Peregrine\\files\\dsiabeld.bot", disabled)
+        save_data("disabled.bot", disabled)
     for List in (adminlist,sadminlist):
         if nick in List: List.remove(nick)
 
