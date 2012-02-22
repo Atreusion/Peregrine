@@ -27,7 +27,6 @@ import socket
 import tweepy
 import signal
 hparser = HParser()
-os.system('title Peregrine')
 getcontext().prec=10
 signal.signal( signal.SIGTERM, shutdown )
 
