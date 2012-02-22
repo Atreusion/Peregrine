@@ -94,7 +94,7 @@ def save_data( filename, data ):
 
 maiq=stuffz.maiq
 disabled = load_data('disabled.bot')
-dnd = load_data('dnd.bot', {1:"SOMETHING'S WRONG LOL"})
+dnd = load_data('dnd.bot', {1:"SOMETHING'S RONG LOL"})
 nickserv = load_data('nickserv.bot')
 tfw = load_data('tfw.bot')
 seen = load_data('seen.bot')
