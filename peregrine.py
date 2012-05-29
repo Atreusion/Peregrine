@@ -28,7 +28,7 @@ import tweepy
 import signal
 hparser = HParser()
 getcontext().prec=10
-signal.signal( signal.SIGTERM, shutdown )
+
 
 with open('irc.pid', 'w') as f:
     f.write( str(os.getpid()) )
@@ -78,13 +78,16 @@ server_data = {
 
 irc = irclib.IRC()
 
-def load_data( filename, default={}):
+def load_data( filename, default={}, override=True ):
     path = os.sep.join([os.getcwd(), 'files', filename])
     if os.path.exists(path):
         f = open(path, 'r')
-        data = cPickle.load(f)
-        f.close()
-        return data
+        try:
+            data = cPickle.load(f)
+            f.close()
+            return data
+        except EOFError:
+            if override: return default
     return default
 
 def save_data( filename, data ):
@@ -174,6 +177,8 @@ def shutdown():
 ##    if restart: os.system('start C:\\Users\\David\\Peregrine\\start.bat')
     os.remove('irc.pid')
     sys.exit(0)
+
+signal.signal( signal.SIGTERM, shutdown )
 
 
 class twitter_class:
@@ -651,9 +656,9 @@ def onPubmsg(connection, event):
         else:
             connection.privmsg(channel, traceback.format_exc().splitlines()[-1])
     if nick in sadminlist and lowm=='!quit':
-        pquit()
+        shutdown()
     if nick in sadminlist and lowm=='!restart':
-        pquit(restart=True)
+        shutdown(restart=True)
 
 
 def difs(a,b,prec=None):
