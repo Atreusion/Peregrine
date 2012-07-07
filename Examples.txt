@@ -4,22 +4,3 @@ Well, first things first, everything you do goes through me.  Yes, me.  No, not 
 
 That being said, I'm fairly lenient.  I'd probably ask you to edit it a certain way instead of outright deleting it.
 
-In any case, this here .txt is to show you how to edit the bot in different ways.
-
-======
-BASICS
-======
-
-Well, first, you need a GitHub account.  Getchu one.
-
-Next, fork Peregrine.  Do it dirty.  Fork him hard by clicking the "Fork" button located in the top-right of Peregrine's page.
-
-Next, go to peregrine.py, and click on "Edit this file" on the top right.
-
-Make your changes (how-to detailed below), enter a summary below the code, and click "Commit Changes"
-
-Now I'm a bit hazy on what happens next.  After this happens once I'll probably get it straighened out, though.  I'm pretty sure that, at this point, I'm notified of the commit, and can either merge it, edit it, or reject it.
-
-Beyond that, it's just a question of what I want to do with your changes.  I might (and probably will) edit it myself to fit into the bot.
-
-Now, on to different types of edit you can do.
