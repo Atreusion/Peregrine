@@ -640,7 +640,7 @@ def onPubmsg(connection, event):
                     connection.privmsg(channel, 'You have tweeted!')
             else:
                 connection.privmsg(channel, 'Sorry, but the OAuth credentials have disappeared.  Bug Atreus to fix this.')
-        if lowm=='!vend':
+        if lowm=='!vend' and enabled(connection.server, channel, 'vend'):
             global vendlist
             if not vendlist: vendlist = httpget('https://itvends.com/vend?action=vend&format=text&count=10').split('\n')
             vend=vendlist.pop()
@@ -1124,7 +1124,7 @@ def onDisconnect(connection, event):
 irc.add_global_handler('welcome', onWelcome)
 irc.add_global_handler('pubmsg', onPubmsg)
 irc.add_global_handler('pubmsg', UESP)
-irc.add_global_handler('pubmsg', dots)
+#irc.add_global_handler('pubmsg', dots)
 irc.add_global_handler('privnotice', onPrivmsg)
 irc.add_global_handler('privmsg', onPubmsg)
 irc.add_global_handler('quit', onQuit)
