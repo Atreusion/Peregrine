@@ -56,12 +56,6 @@ server_data = {
     'channels' : ['#bots', '#boats'],
     'object' : None
     },
-##'irc.deviantart.com' : {
-##    'port' : 6667,
-##    'nickname' : 'Peregrine',
-##    'channels' : ['#bots', '#devart'],
-##    'object' : None
-##    },
 'mindjail.subluminal.net' : {
     'port' : 6667,
     'nickname' : 'Peregrine',
@@ -70,7 +64,7 @@ server_data = {
     },
 'verne.freenode.net' : {
     'port' : 6667,
-    'nickname' : 'HaskillBot',
+    'nickname' : 'Peregrine',
     'channels' : ['#necrolounge'],
     'object' : None
     }
@@ -421,21 +415,21 @@ def onPubmsg(connection, event):
                     area = urllib.urlencode({'':area})[1:]
                     letter=tfw[nick.lower()]['fck']
                 if letter=='f':
-                    url = 'http://www.thefuckingweather.com/?zipcode=%s' % area
+                    url = 'http://thefuckingweather.com/?where=%s' % area
                     units = 'DEGREES FAHRENHEIT'
                 else:
-                    url = 'http://www.thefuckingweather.com/?zipcode=%s&CELSIUS=yes' % area
+                    url = 'http://thefuckingweather.com/?where=%s&unit=c' % area
                 code = httpget(url)
-                weather = code.split('<div id="content"><div class="large" >',1)[1].split('</div>',1)[0].split('<br />')
-                degrees = weather[0][:-7]
+                weather = code.split("""<p class="large"><span class="temperature" tempf=\"""")[1].split(">",1)[1].split("""</p>\r\n\t\t<table id="inputArea" class="formTable">""")[0]
+                degrees = weather.split("<",1)[0]
                 if letter=='k':
                     degrees=str(float(degrees)+273.15)
                     units = 'KELVIN'
                 elif letter=='c': units='DEGREES CELSIUS'
-                comment = '. '.join(weather[2:])
-                comments = code.split('<span>')[1].split('</span>')[0]
+                remark = weather.split(""""remark">""",1)[1].split("</p>",1)[0]
+                flavor = weather.split(""""flavor">""",1)[1]
                 dtime=difs(time.time(),a)
-                connection.privmsg(channel, '%s: %s %s?!  %s.  %s (%s second%s)' % (temp, degrees, units, comment, comments, dtime, ((dtime <> '1.00' and 's') or '')))
+                connection.privmsg(channel, '%s: %s %s?!  %s.  %s (%s second%s)' % (temp, degrees, units, remark, flavor, dtime, ((dtime <> '1.00' and 's') or '')))
                 del code
             except:
                 if len(lwords)==1 and not nick.lower() in tfw:
@@ -658,8 +652,8 @@ def onPubmsg(connection, event):
             connection.privmsg(channel, traceback.format_exc().splitlines()[-1])
     if nick in sadminlist and lowm=='!quit':
         shutdown()
-    if nick in sadminlist and lowm=='!restart':
-        shutdown(restart=True)
+#    if nick in sadminlist and lowm=='!restart':
+#        shutdown(restart=True)
 
 
 def difs(a,b,prec=None):
@@ -683,29 +677,6 @@ def remove_dups(L):
         # the list, and if it does, delete it.
         if L[i] in L[:i]:
             del L[i]
-
-
-##def difd(e,s):
-##        t=str(e-s)
-##        t=t.replace('.',':').split(':')
-##        hours=int(t[0])
-##        minutes=int(t[1])
-##        secs=t[2]
-##        days=0
-##        while hours>=24:
-##            days+=1
-##            hours-=24
-##        if days==0: d=''
-##        elif days==1: d=' %s day, ' % str(days)
-##        else: d=' %s days, ' % str(days)
-##        if hours==0: h=''
-##        elif hours==1: h=' %s hour, ' % str(hours)
-##        else: h=' %s hours, ' % str(hours)
-##        if minutes==0: m=''
-##        elif minutes==1: m=' %s minute, ' % str(minutes)
-##        else: m=' %s minutes, ' % str(minutes)
-##        l=[d,h,m,secs]
-##        return l
 
 #>>> params = {"server":"mpilgrim", "database":"master", "uid":"sa", "pwd":"secret"}
 #>>> ["%s=%s" % (k, v) for k, v in params.items()]
@@ -799,13 +770,6 @@ def names(connection, event):
     if not channel in userlist[connection.server]: userlist[connection.server][channel] = []
     userlist[connection.server][channel].extend(nicks)
     remove_dups(userlist[connection.server][channel])
-##            s = arguments.split()
-##            if s[1]=="353" and s[3]=="=":
-##                nicks = s[5:]
-##                nicks = [nick_strip(nick) for nick in nicks]
-##                if not connection.server in userlist: userlist[connection.server]={}
-##                userlist[connection.server][s[4]]=nicks
-##            del s
 
 def onPrivmsg(connection, event):
     message = event.arguments()[0]
