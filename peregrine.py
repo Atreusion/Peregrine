@@ -640,11 +640,12 @@ def onPubmsg(connection, event):
                     connection.privmsg(channel, 'You have tweeted!')
             else:
                 connection.privmsg(channel, 'Sorry, but the OAuth credentials have disappeared.  Bug Atreus to fix this.')
-        if lowm=='!vend' and enabled(connection.server, channel, 'vend'):
+        if (lowm=='!vend' and enabled(connection.server, channel, 'vend')) or (lowm=='!blend' and enabled(connection.server, channel, 'blend')):
             global vendlist
             if not vendlist: vendlist = httpget('https://itvends.com/vend?action=vend&format=text&count=10').split('\n')
             vend=vendlist.pop()
-            vend='vends %s.' % vend
+            if lowm=="!vend": vend='vends %s.' % vend
+            else: vend='blends %s.' % vend
             connection.action(channel, vend)
         if lowm=='!maiq' or lowm=="!m'aiq":
             choice = random.choice(maiq)
