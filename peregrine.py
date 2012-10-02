@@ -101,7 +101,7 @@ niven = stuffz.niven
 sandvich = stuffz.sandvich
 userlist={}
 vendlist=[]
-output_limit={'dnd':{'limit':2.0,'last_used':0.0}}
+output_limit={'dnd':{'limit':5.0,'last_used':0.0}}
 
 sdw = re.compile("<a href=\"http://en\.wikipedia\.org/wiki/.*\">(.*)</a>")
 uespregex = re.compile("<a href=\"/wiki/(.*)\" title=")
@@ -1024,18 +1024,20 @@ def enabled(server, channel, script):
     if server in disabled:
         if channel.lower() in disabled[server]:
             if script in disabled[server][channel.lower()]:
-                 enable = False
+                 return False
             else:
                  enable =  True
         else:
             enable =  True
     else:
         enable = True
-    if script in output_limit.keys():
+    if script in output_limit.keys() and enable:
         now = time.time()
         last_time = output_limit[script]['last_used']
         dtime=difs(now, last_time)
-        if float(dtime) > output_limit[script]['limit']: enable = True
+        if float(dtime) > output_limit[script]['limit']:
+            enable = True
+            output_limit[script]['last_used'] = now
         else: enable = False
     return enable
 
