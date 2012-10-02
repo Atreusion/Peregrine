@@ -43,31 +43,31 @@ server_data = {
     'nickname' : 'Peregrine',
     'channels' : ['#bots', '#stagecrew', '#necrolounge'],
     'object' : None
-    }, # note the comma
-'irc.chatspike.net' : {
-    'port' : 6667,
-    'nickname' : 'Peregrine',
-    'channels' : ['#uespwiki', '#bots', '#trspam', '#equilibrium', '#Aetherius'],
-    'object' : None
-    },
-'staticfree.foonetic.net' : {
-    'port' : 6667,
-    'nickname' : 'Peregrine',
-    'channels' : ['#bots', '#boats'],
-    'object' : None
-    },
-'mindjail.subluminal.net' : {
-    'port' : 6667,
-    'nickname' : 'Peregrine',
-    'channels' : ['#bots', '#boats'],
-    'object' : None
-    },
-'verne.freenode.net' : {
-    'port' : 6667,
-    'nickname' : 'Peregrine',
-    'channels' : ['#necrolounge'],
-    'object' : None
-    }
+    } # note the comma
+#'irc.chatspike.net' : {
+#    'port' : 6667,
+#    'nickname' : 'Peregrine',
+#    'channels' : ['#uespwiki', '#bots', '#trspam', '#equilibrium', '#Aetherius'],
+#    'object' : None
+#    },
+#'staticfree.foonetic.net' : {
+#    'port' : 6667,
+#    'nickname' : 'Peregrine',
+#    'channels' : ['#bots', '#boats'],
+#    'object' : None
+#    },
+#'mindjail.subluminal.net' : {
+#    'port' : 6667,
+#    'nickname' : 'Peregrine',
+#    'channels' : ['#bots', '#boats'],
+#    'object' : None
+#    },
+#'verne.freenode.net' : {
+#    'port' : 6667,
+#    'nickname' : 'Peregrine',
+#    'channels' : ['#necrolounge'],
+#    'object' : None
+#    }
 }
 
 irc = irclib.IRC()
@@ -101,8 +101,8 @@ niven = stuffz.niven
 sandvich = stuffz.sandvich
 userlist={}
 vendlist=[]
-output_limit={'dnd':2}
-last_used={}
+output_limit={'dnd':{'limit':2.0,'last_used':0.0}}
+
 sdw = re.compile("<a href=\"http://en\.wikipedia\.org/wiki/.*\">(.*)</a>")
 uespregex = re.compile("<a href=\"/wiki/(.*)\" title=")
 titlefind = re.compile("<title\s?>(.*)<\/title\s?>", re.I)
@@ -1031,12 +1031,12 @@ def enabled(server, channel, script):
             enable =  True
     else:
         enable = True
-    if script in output_limit:
+    if script in output_limit.keys():
         now = time.time()
-        if script in last_used.keys():
-            last_time = last_used[script]
-            dtime=difs(now, last_time)
-            if int(dtime) > output_limit[script]:
+        last_time = output_limit[script]['last_used']
+        dtime=difs(now, last_time)
+        if float(dtime) > output_limit[script]['limit']: enable = True
+        else: enable = False
     return enable
 
 def onKick(connection,event):
