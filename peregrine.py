@@ -93,7 +93,7 @@ disabled = load_data('disabled.bot')
 dnd = load_data('dnd.bot', {1:"SOMETHING'S RONG LOL"})
 nickserv = load_data('nickserv.bot')
 tfw = load_data('tfw.bot')
-seen = load_data('seen.bot', {'BROKEN': {'action': 'not working', 'secs': 0, 'lines': 0, 'chars': 0}})
+seen = load_data('seen.bot', {'BROKEN': {'action': 'not working', 'secs': 0, 'lines': 0}}, override=False)
 adminlist = []
 sadminlist = []
 memory = {}
@@ -262,7 +262,7 @@ def onPubmsg(connection, event):
             if 'lines' in seen[nick.lower()]: seen[nick.lower()]['lines']+=1
             else: seen[nick.lower()]['lines']=1
         else:
-            seen[nick.lower()]={'secs':time.time(),'action':action,'lines':1,'chars':len(message)}#,'lols':message.lower().count('lol')}
+            seen[nick.lower()]={'secs':time.time(),'action':action,'lines':1}
         if lowm == "!version":
             connection.privmsg(channel, 'I am version .831k :( (You act like this bot will ever be worthy of a version 1)')
         if lowm.startswith("!wp "):
@@ -821,7 +821,7 @@ def onQuit(connection, event):
             seen[nick.lower()]['secs']=time.time()
             seen[nick.lower()]['action']=action
         else:
-            seen[nick.lower()]={'secs':time.time(),'action':action,'lines':0,'chars':0}#,'lols':0}
+            seen[nick.lower()]={'secs':time.time(),'action':action,'lines':0}
         if nick in adminlist:
             adminlist.remove(nick)
         if nick in sadminlist:
@@ -839,7 +839,7 @@ def onPart(connection, event):
         seen[nick.lower()]['secs']=time.time()
         seen[nick.lower()]['action']=action
     else:
-        seen[nick.lower()]={'secs':time.time(),'action':action,'lines':0,'chars':0}#,'lols':0}
+        seen[nick.lower()]={'secs':time.time(),'action':action,'lines':0}
     if nick in adminlist:
         adminlist.remove(nick)
     if nick in sadminlist:
@@ -861,7 +861,7 @@ def onJoin(connection, event):
         seen[nick.lower()]['secs']=time.time()
         seen[nick.lower()]['action']=action
     else:
-        seen[nick.lower()]={'secs':time.time(),'action':action,'lines':0,'chars':0}#,'lols':0}
+        seen[nick.lower()]={'secs':time.time(),'action':action,'lines':0}
 #disabled[connection.server][channel].append(temp[1])
     if not connection.server in disabled:
         disabled[connection.server] = {}
@@ -888,13 +888,13 @@ def nick(connection, event):
         seen[newnick.lower()]['secs']=time.time()
         seen[newnick.lower()]['action']=action
     else:
-        seen[newnick.lower()]={'secs':time.time(),'action':action,'lines':0,'chars':0}#,'lols':0}
+        seen[newnick.lower()]={'secs':time.time(),'action':action,'lines':0}
     action='changing nick to ' + newnick
     if oldnick.lower() in seen:
         seen[oldnick.lower()]['secs']=time.time()
         seen[oldnick.lower()]['action']=action
     else:
-        seen[oldnick.lower()]={'secs':time.time(),'action':action,'lines':0,'chars':0}#,'lols':0}
+        seen[oldnick.lower()]={'secs':time.time(),'action':action,'lines':0}
     if oldnick in adminlist:
         adminlist.remove(oldnick)
         adminlist.append(newnick)
@@ -1037,13 +1037,13 @@ def onKick(connection,event):
         seen[kicked.lower()]['secs']=time.time()
         seen[kicked.lower()]['action']=action
     else:
-        seen[kicked.lower()]={'secs':time.time(),'action':action,'lines':0,'chars':0}#,'lols':0}
+        seen[kicked.lower()]={'secs':time.time(),'action':action,'lines':0}
     action='kicking %s from %s for: %s' % (kicked,channel,reason)
     if kicker.lower() in seen:
         seen[kicker.lower()]['secs']=time.time()
         seen[kicker.lower()]['action']=action
     else:
-        seen[kicker.lower()]={'secs':time.time(),'action':action,'lines':0,'chars':0}#,'lols':0}
+        seen[kicker.lower()]={'secs':time.time(),'action':action,'lines':0}
     if kicked in adminlist:
         adminlist.remove(kicked)
     if kicked in sadminlist:
