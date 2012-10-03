@@ -93,7 +93,7 @@ disabled = load_data('disabled.bot')
 dnd = load_data('dnd.bot', {1:"SOMETHING'S RONG LOL"})
 nickserv = load_data('nickserv.bot')
 tfw = load_data('tfw.bot')
-seen = load_data('seen.bot')
+seen = load_data('seen.bot', {'BROKEN': {'action': 'not working', 'secs': 0, 'lines': 0, 'chars': 0}})
 adminlist = []
 sadminlist = []
 memory = {}
@@ -104,6 +104,7 @@ vendlist=[]
 output_limit={
 'dnd':{'limit':2.0,'last_used':0.0},
 'vend':{'limit':2.0,'last_used':0.0},
+'blend':{'limit':2.0,'last_used':0.0},
 'tweet':{'limit':2.0,'last_used':0.0},
 'tfw':{'limit':2.0,'last_used':0.0},
 'niven':{'limit':2.0,'last_used':0.0},
@@ -260,10 +261,6 @@ def onPubmsg(connection, event):
             seen[nick.lower()]['action']=action
             if 'lines' in seen[nick.lower()]: seen[nick.lower()]['lines']+=1
             else: seen[nick.lower()]['lines']=1
-            if 'chars' in seen[nick.lower()]: seen[nick.lower()]['chars']+=len(message)
-            else: seen[nick.lower()]['chars']=len(message)
-##            if 'lols' in seen[nick.lower()]: seen[nick.lower()]['lols']+=message.lower().count('lol')
-##            else: seen[nick.lower()]['lols']=message.lower().count('lol')
         else:
             seen[nick.lower()]={'secs':time.time(),'action':action,'lines':1,'chars':len(message)}#,'lols':message.lower().count('lol')}
         if lowm == "!version":
@@ -553,13 +550,13 @@ def onPubmsg(connection, event):
                 else: m='%s minutes, ' % str(minutes)
                 connection.privmsg(channel, '%s last seen %s%s%s%s seconds ago, %s.' % (temp,d,h,m,seconds,action))
             else: connection.privmsg(channel, 'Nope!  Haven\'t seen them.')
-        if lowm.startswith('!treat ') and len(lwords)>1:
+        if lowm.startswith('!treat ') and len(lwords)>1 and enabled(connection.server, channel, 'treat'):
             treated=' '.join(words[1:])
             if treated.lower() == connection.get_nickname().lower():
                 connection.action(channel, 'wags his tail.')
             else:
                 connection.action(channel, 'gives a treat to ' + treated)
-        if (lowm.startswith('!blame ') or lowm.startswith('!blames ')) and len(lwords)>1:
+        if (lowm.startswith('!blame ') or lowm.startswith('!blames ')) and len(lwords)>1 and enabled(connection.server, channel, 'blame'):
             blamed=' '.join(words[1:])
             if blamed.lower() == connection.get_nickname().lower():
                 connection.action(channel, 'hangs head in shame.')
@@ -568,31 +565,10 @@ def onPubmsg(connection, event):
         if lowm.startswith('~delseen ') and len(lwords)>1 and nick in adminlist:
             del seen[lowm[9:]]
             connection.privmsg(channel, '%s deleted from seen.' % lowm[9:])
-        if lowm.startswith('!stats ') and len(words)>2:
-##            if lwords[1]=='lols' and lwords[2] in seen:
-##                lols=str(seen[lwords[2]]['lols'])
-##                lines=seen[lwords[2]]['lines']
-##                lolpercentage=str(float(lols)/float(lines)*100.0)[:5]
-##                connection.privmsg(channel, '%s has said "lol" %s times, about %s%% percent of their lines contain it.' % (lwords[2],lols,lolpercentage))
-            if lwords[1]=='lines' and lwords[2] in seen:
-                connection.privmsg(channel, '%s has spoken %s lines.' % (lwords[2],seen[lwords[2]]['lines']))
-            if (lwords[1]=='characters' or lwords[1]=='chars' or lwords[1]=='letters') and lwords[2] in seen:
-                chars=str(seen[lwords[2]]['chars'])
-                lines=seen[lwords[2]]['lines']
-                charaverage=str(float(chars)/float(lines))[:5]
-                connection.privmsg(channel, '%s has typed %s characters, resulting in a %s average per line.' % (lwords[2],chars,charaverage))
         if nick in sadminlist and lowm.startswith('~dellines'):
             n1 = len(seen)
             for name in seen.keys():
                 if seen[name]['lines']<11:
-                    del seen[name]
-            n2 = len(seen)
-            diff=difs(n1,n2)
-            connection.privmsg(channel, '%s names cleared.' % diff)
-        if nick in sadminlist and lowm.startswith('~delchars'):
-            n1 = len(seen)
-            for name in seen.keys():
-                if seen[name]['chars']<21:
                     del seen[name]
             n2 = len(seen)
             diff=difs(n1,n2)
@@ -633,7 +609,7 @@ def onPubmsg(connection, event):
             else:
                 n = random.choice(dnd.keys())
                 connection.privmsg(channel, '%s: %s' % (n, dnd[n]))
-        if lowm.startswith('!tweet ') and channel.lower()=='#necrolounge':
+        if lowm.startswith('!tweet ') and channel.lower()=='#necrolounge' and enabled(connection.server, channel, 'tweet'):
             if twitter.on:
                 tweet=message[7:]
                 if len(tweet)>140:
