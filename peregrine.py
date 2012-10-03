@@ -43,31 +43,31 @@ server_data = {
     'nickname' : 'Peregrine',
     'channels' : ['#bots', '#stagecrew', '#necrolounge'],
     'object' : None
-    } # note the comma
-#'irc.chatspike.net' : {
-#    'port' : 6667,
-#    'nickname' : 'Peregrine',
-#    'channels' : ['#uespwiki', '#bots', '#trspam', '#equilibrium', '#Aetherius'],
-#    'object' : None
-#    },
-#'staticfree.foonetic.net' : {
-#    'port' : 6667,
-#    'nickname' : 'Peregrine',
-#    'channels' : ['#bots', '#boats'],
-#    'object' : None
-#    },
-#'mindjail.subluminal.net' : {
-#    'port' : 6667,
-#    'nickname' : 'Peregrine',
-#    'channels' : ['#bots', '#boats'],
-#    'object' : None
-#    },
-#'verne.freenode.net' : {
-#    'port' : 6667,
-#    'nickname' : 'Peregrine',
-#    'channels' : ['#necrolounge'],
-#    'object' : None
-#    }
+    }, # note the comma
+'irc.chatspike.net' : {
+    'port' : 6667,
+    'nickname' : 'Peregrine',
+    'channels' : ['#uespwiki', '#bots', '#trspam', '#equilibrium', '#Aetherius'],
+    'object' : None
+    },
+'staticfree.foonetic.net' : {
+    'port' : 6667,
+    'nickname' : 'Peregrine',
+    'channels' : ['#bots', '#boats'],
+    'object' : None
+    },
+'mindjail.subluminal.net' : {
+    'port' : 6667,
+    'nickname' : 'Peregrine',
+    'channels' : ['#bots', '#boats'],
+    'object' : None
+    },
+'verne.freenode.net' : {
+    'port' : 6667,
+    'nickname' : 'Peregrine',
+    'channels' : ['#necrolounge'],
+    'object' : None
+    }
 }
 
 irc = irclib.IRC()
@@ -101,7 +101,16 @@ niven = stuffz.niven
 sandvich = stuffz.sandvich
 userlist={}
 vendlist=[]
-output_limit={'dnd':{'limit':5.0,'last_used':0.0}}
+output_limit={
+'dnd':{'limit':2.0,'last_used':0.0},
+'vend':{'limit':2.0,'last_used':0.0},
+'tweet':{'limit':2.0,'last_used':0.0},
+'tfw':{'limit':2.0,'last_used':0.0},
+'niven':{'limit':2.0,'last_used':0.0},
+'abuse':{'limit':2.0,'last_used':0.0},
+'blame':{'limit':2.0,'last_used':0.0},
+'treat':{'limit':2.0,'last_used':0.0}
+}
 
 sdw = re.compile("<a href=\"http://en\.wikipedia\.org/wiki/.*\">(.*)</a>")
 uespregex = re.compile("<a href=\"/wiki/(.*)\" title=")
