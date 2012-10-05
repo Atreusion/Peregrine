@@ -1109,11 +1109,15 @@ def ping(server_object, server):
         try:
             try:
                 #3 try statements makes me feel dirty and kinky
+                #not worse than anyhting else I do on this bot, though
                 server_object.connect(server, port, nickname, ircname="Peregrine.  Owned by Atreus.")
             except:
                 server_object.connect(server, port, nickname)
         except:
             print 'Unable to connect to %s (ping)' % server
+            import traceback
+            print traceback.format_exc
+            ()raw_input()
     irc.execute_delayed(300, ping, (server_object, server))
 
 
