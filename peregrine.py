@@ -1116,8 +1116,8 @@ def ping(server_object, server):
         except:
             print 'Unable to connect to %s (ping)' % server
             import traceback
-            print traceback.format_exc
-            ()raw_input()
+            print traceback.format_exc()
+            raw_input()
     irc.execute_delayed(300, ping, (server_object, server))
 
 
