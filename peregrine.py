@@ -187,6 +187,7 @@ signal.signal( signal.SIGTERM, shutdown )
 
 
 class twitter_class:
+    """This is actually something I'm proud of!  I did this (not tweepy, the class)! :D"""
     def __init__(self):
         if os.path.exists(os.sep.join([os.getcwd(), 'files', 'twitter.bot'])):
             self.login = load_data('twitter.bot')
@@ -252,8 +253,7 @@ def onPubmsg(connection, event):
     nick = ''.join(nick)
     words = message.split()
     lwords = lowm.split()
-    if channel==connection.get_nickname(): channel=nick
-    #jercos can suck a dick :V
+    if channel==connection.get_nickname(): channel=nick # Basic query support, don't blame me if it goes wrong
     try:
         action='speaking in %s' % channel
         if nick.lower() in seen:
@@ -264,7 +264,7 @@ def onPubmsg(connection, event):
         else:
             seen[nick.lower()]={'secs':time.time(),'action':action,'lines':1}
         if lowm == "!version":
-            connection.privmsg(channel, 'I am version .831k :( (You act like this bot will ever be worthy of a version 1)')
+            connection.privmsg(channel, 'I am version .832g :( (You act like this bot will ever be worthy of a version 1)')
         if lowm.startswith("!wp "):
             args = message[4:]
             args=urllib.urlencode({'' :args})
@@ -314,7 +314,6 @@ def onPubmsg(connection, event):
             else: m='%s minutes, ' % str(minutes)
             connection.privmsg(channel, 'I was born on Sunday, April 19th, 2009, at 14:07:10.  That was %s%s%s%s seconds ago.' % (d,h,m,seconds))
         if lowm.startswith('~toggle ') and nick in adminlist:
-    #disabled[server][channel]
             if len(words) == 2:
                 if words[1] in disabled[connection.server][channel.lower()]:
                     disabled[connection.server][channel.lower()].remove(words[1])
@@ -375,11 +374,6 @@ def onPubmsg(connection, event):
         if lowm == '!rejoin all' and nick in adminlist:
             for channel in server_data[connection.server]['channels']:
                 connection.join(channel)
-        #131246 <@Maid> You can use all alphanumeric, `, |, _, [, ]
-        #131253 <@Maid> Also ^, yeah
-        #131256 <&Atreus> k.
-        #131309 <@Maid> I think you can use {}<> too, but don't recall
-        #131314 * Maid is now known as {}
         if (lowm.startswith('!abuse') or lowm.startswith('~abuse')) and enabled(connection.server, channel, 'abuse') and "#"==channel[0]:
             if len(lowm)>7:
                 f = ' '.join(words[1:])
@@ -460,7 +454,8 @@ def onPubmsg(connection, event):
                     else:
                         connection.privmsg(channel, 'You fail, good sir.')
             except:
-                connection.privmsg(channel, 'Error')
+#                connection.privmsg(channel, 'Error')
+                pass
         if lowm.startswith('!niven') and enabled(connection.server, channel, 'niven'):
             if len(words)>1:
                 if lwords[1] in niven.keys():
@@ -1117,7 +1112,6 @@ def ping(server_object, server):
             print 'Unable to connect to %s (ping)' % server
             import traceback
             print traceback.format_exc()
-            raw_input()
     irc.execute_delayed(300, ping, (server_object, server))
 
 
