@@ -188,7 +188,7 @@ ccmds = {'!ctemplate':'http://www.uesp.net/w/index.php?title=Template:', "!cuesp
 "!ctrg":"http://www.uesp.net/w/index.php?title=Redguard_talk:", "!ctsi":"http://www.uesp.net/w/index.php?title=Shivering_talk:",
 "!cttemp":"http://www.uesp.net/w/index.php?title=Template_talk:", "!ctt3m":"http://www.uesp.net/w/index.php?title=Tes3Mod_talk:",
 "!ctt4m":"http://www.uesp.net/w/index.php?title=Tes4Mod_talk:", "!cttr":"http://www.uesp.net/w/index.php?title=Tribunal_talk:",
-"!ctuesp":"http://www.uesp.net/w/index.php?title=UESPWiki_talk:", "!ctuser":"http://www.uesp.net/w/index.php?title=User_talk:"
+"!ctuesp":"http://www.uesp.net/w/index.php?title=UESPWiki_talk:", "!ctuser":"http://www.uesp.net/w/index.php?title=User_talk:",
 "!csr":"http://www.uesp.net/w/index.php?title=Skyrim:", "!ctsr":"http://www.uesp.net/w/index.php?title=Skyrim_talk:"}
 asearch = {'!ob':'&ns116=1','!si':'&ns126=1','!uesp':'&ns0=1','!uespwiki':'&ns4=1','!lore':'&ns130=1','!mw':'&ns110=1','!tr':'&ns112=1','!bm':'&ns114=1'}
 niven={'1a':'Never throw shit at an armed man.',
