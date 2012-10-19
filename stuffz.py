@@ -163,7 +163,8 @@ acmds = {'!sr':'http://www.uesp.net/wiki/Skyrim:','!skyrim':'http://www.uesp.net
 "!trg":"http://www.uesp.net/wiki/Redguard_talk:", "!tsi":"http://www.uesp.net/wiki/Shivering_talk:",
 "!ttemp":"http://www.uesp.net/wiki/Template_talk:", "!tt3m":"http://www.uesp.net/wiki/Tes3Mod_talk:",
 "!tt4m":"http://www.uesp.net/wiki/Tes4Mod_talk:", "!ttr":"http://www.uesp.net/wiki/Tribunal_talk:",
-"!tuesp":"http://www.uesp.net/wiki/UESPWiki_talk:", "!tuser":"http://www.uesp.net/wiki/User_talk:"}
+"!tuesp":"http://www.uesp.net/wiki/UESPWiki_talk:", "!tuser":"http://www.uesp.net/wiki/User_talk:",
+"!tsr":"http://www.uesp.net/wiki/Skyrim_talk:"}
 ccmds = {'!ctemplate':'http://www.uesp.net/w/index.php?title=Template:', "!cuesp":"http://www.uesp.net/w/index.php?title=",
 "!cuespwiki":"http://www.uesp.net/w/index.php?title=UESPWiki:", "!clore":"http://www.uesp.net/w/index.php?title=Lore:",
 "!cimage":"http://www.uesp.net/w/index.php?title=Image:", "!cmorrowind":"http://www.uesp.net/w/index.php?title=Morrowind:",
@@ -187,7 +188,8 @@ ccmds = {'!ctemplate':'http://www.uesp.net/w/index.php?title=Template:', "!cuesp
 "!ctrg":"http://www.uesp.net/w/index.php?title=Redguard_talk:", "!ctsi":"http://www.uesp.net/w/index.php?title=Shivering_talk:",
 "!cttemp":"http://www.uesp.net/w/index.php?title=Template_talk:", "!ctt3m":"http://www.uesp.net/w/index.php?title=Tes3Mod_talk:",
 "!ctt4m":"http://www.uesp.net/w/index.php?title=Tes4Mod_talk:", "!cttr":"http://www.uesp.net/w/index.php?title=Tribunal_talk:",
-"!ctuesp":"http://www.uesp.net/w/index.php?title=UESPWiki_talk:", "!ctuser":"http://www.uesp.net/w/index.php?title=User_talk:"}
+"!ctuesp":"http://www.uesp.net/w/index.php?title=UESPWiki_talk:", "!ctuser":"http://www.uesp.net/w/index.php?title=User_talk:"
+"!csr":"http://www.uesp.net/w/index.php?title=Skyrim:", "!ctsr":"http://www.uesp.net/w/index.php?title=Skyrim_talk:"}
 asearch = {'!ob':'&ns116=1','!si':'&ns126=1','!uesp':'&ns0=1','!uespwiki':'&ns4=1','!lore':'&ns130=1','!mw':'&ns110=1','!tr':'&ns112=1','!bm':'&ns114=1'}
 niven={'1a':'Never throw shit at an armed man.',
 '1b':'Never stand next to someone who is throwing shit at an armed man.',
