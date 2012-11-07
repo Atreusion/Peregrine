@@ -983,8 +983,8 @@ def uespregextest(url2,url,connection,channel):
             break
     if url.lower().endswith('s') and y:
         url=url[:-1]
-        url2=url2[:-1]
-        code=httpget(url2)
+        url_temp=url2[:-1]
+        code=httpget(url_temp)
         match = uespregex.findall(code)
         match = match[:-8]
         for pagename in match:
