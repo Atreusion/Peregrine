@@ -37,45 +37,6 @@ with open('irc.pid', 'w') as f:
 #mylist will be a list containing the true random numbers.
 #def foo(): for i in range(5): return i # returns 0
 
-server_data = {
-'irc.nexuswar.com' : {
-    'port' : 6667,
-    'nickname' : 'Peregrine',
-    'channels' : ['#bots', '#stagecrew', '#necrolounge'],
-    'object' : None
-    }, # note the comma
-'irc.chatspike.net' : {
-    'port' : 6667,
-    'nickname' : 'Peregrine',
-    'channels' : ['#uespwiki', '#bots', '#trspam', '#equilibrium', '#Aetherius'],
-    'object' : None
-    },
-'staticfree.foonetic.net' : {
-    'port' : 6667,
-    'nickname' : 'Peregrine',
-    'channels' : ['#bots', '#boats'],
-    'object' : None
-    },
-'mindjail.subluminal.net' : {
-    'port' : 6667,
-    'nickname' : 'Peregrine',
-    'channels' : ['#bots', '#boats'],
-    'object' : None
-    },
-'verne.freenode.net' : {
-    'port' : 6667,
-    'nickname' : 'Peregrine',
-    'channels' : ['#necrolounge'],
-    'object' : None
-    },
-'atreus11.jtvirc.com' : {
-    'port' : 6667,
-    'nickname' : 'AtryBot',
-    'channels' : ['#atreus11'],
-    'object' : None
-    'password' : nickserv['atreus11.jtvirc.com']
-    }    
-}
 
 irc = irclib.IRC()
 
@@ -240,6 +201,52 @@ class twitter_class:
 
 twitter=twitter_class()
 
+jtvircpass = nickserv['atreus11.jtvirc.com']
+
+server_data = {
+'irc.nexuswar.com' : {
+    'port' : 6667,
+    'nickname' : 'Peregrine',
+    'channels' : ['#bots', '#stagecrew', '#necrolounge'],
+    'object' : None,
+    'password' : None
+    }, # note the comma
+'irc.chatspike.net' : {
+    'port' : 6667,
+    'nickname' : 'Peregrine',
+    'channels' : ['#uespwiki', '#bots', '#trspam', '#equilibrium', '#Aetherius'],
+    'object' : None,
+    'password' : None
+    },
+'staticfree.foonetic.net' : {
+    'port' : 6667,
+    'nickname' : 'Peregrine',
+    'channels' : ['#bots', '#boats'],
+    'object' : None,
+    'password' : None
+    },
+'mindjail.subluminal.net' : {
+    'port' : 6667,
+    'nickname' : 'Peregrine',
+    'channels' : ['#bots', '#boats'],
+    'object' : None,
+    'password' : None
+    },
+'verne.freenode.net' : {
+    'port' : 6667,
+    'nickname' : 'Peregrine',
+    'channels' : ['#necrolounge'],
+    'object' : None,
+    'password' : None
+    },
+'atreus11.jtvirc.com' : {
+    'port' : 6667,
+    'nickname' : 'AtryBot',
+    'channels' : ['#atreus11'],
+    'object' : None,
+    'password' : jtvircpass
+    }
+}
 
 
 def onWelcome(connection, event):
@@ -1107,6 +1114,7 @@ def ping(server_object, server):
         #server_object.disconnect() <-- don't need this because the failed ping calls onDisconnect!
         port = server_data[server]['port']
         nickname = server_data[server]['nickname']
+        server_password = server_data[server]['password']
         server_object = irc.server()
         try:
             try:
@@ -1114,7 +1122,7 @@ def ping(server_object, server):
                 #not worse than anyhting else I do on this bot, though
                 server_object.connect(server, port, nickname, ircname="Peregrine.  Owned by Atreus.")
             except:
-                server_object.connect(server, port, nickname)
+                server_object.connect(server, port, nickname, password = server_password)
         except:
             print 'Unable to connect to %s (ping)' % server
             import traceback
@@ -1125,12 +1133,13 @@ def ping(server_object, server):
 for server in server_data:
     port = server_data[server]['port']
     nickname = server_data[server]['nickname']
+    server_password = server_data[server]['password']
     server_object = irc.server()
     try:
         try:
-            server_object.connect(server, port, nickname, ircname="Peregrine.  Owned by Atreus.")
+            server_object.connect(server, port, nickname, ircname="Peregrine.  Owned by Atreus.", password = server_password)
         except:
-            server_object.connect(server, port, nickname)
+            server_object.connect(server, port, nickname, password=server_password)
     except:
         print 'Unable to connect to %s' % server
     server_object.temp_timer = threading.Timer(300, ping, args=[server_object, server])
