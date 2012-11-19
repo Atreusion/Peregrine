@@ -67,7 +67,14 @@ server_data = {
     'nickname' : 'Peregrine',
     'channels' : ['#necrolounge'],
     'object' : None
-    }
+    },
+'atreus11.jtvirc.com' : {
+    'port' : 6667,
+    'nickname' : 'AtryBot',
+    'channels' : ['#atreus11'],
+    'object' : None
+    'password' : nickserv['atreus11.jtvirc.com']
+    }    
 }
 
 irc = irclib.IRC()
