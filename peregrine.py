@@ -1120,7 +1120,7 @@ def ping(server_object, server):
             try:
                 #3 try statements makes me feel dirty and kinky
                 #not worse than anyhting else I do on this bot, though
-                server_object.connect(server, port, nickname, ircname="Peregrine.  Owned by Atreus.")
+                server_object.connect(server, port, nickname, ircname="Peregrine.  Owned by Atreus.", password = server_password)
             except:
                 server_object.connect(server, port, nickname, password = server_password)
         except:
