@@ -164,7 +164,9 @@ acmds = {'!sr':'http://www.uesp.net/wiki/Skyrim:','!skyrim':'http://www.uesp.net
 "!ttemp":"http://www.uesp.net/wiki/Template_talk:", "!tt3m":"http://www.uesp.net/wiki/Tes3Mod_talk:",
 "!tt4m":"http://www.uesp.net/wiki/Tes4Mod_talk:", "!ttr":"http://www.uesp.net/wiki/Tribunal_talk:",
 "!tuesp":"http://www.uesp.net/wiki/UESPWiki_talk:", "!tuser":"http://www.uesp.net/wiki/User_talk:",
-"!tsr":"http://www.uesp.net/wiki/Skyrim_talk:"}
+"!tsr":"http://www.uesp.net/wiki/Skyrim_talk:", "!dragonborn":"http://www.uesp.net/wiki/Dragonborn:",
+"!db":"http://www.uesp.net/wiki/Dragonborn:", "!online":"http://www.uesp.net/wiki/Online:",
+"!on":"http://www.uesp.net/wiki/Online:"}
 ccmds = {'!ctemplate':'http://www.uesp.net/w/index.php?title=Template:', "!cuesp":"http://www.uesp.net/w/index.php?title=",
 "!cuespwiki":"http://www.uesp.net/w/index.php?title=UESPWiki:", "!clore":"http://www.uesp.net/w/index.php?title=Lore:",
 "!cimage":"http://www.uesp.net/w/index.php?title=Image:", "!cmorrowind":"http://www.uesp.net/w/index.php?title=Morrowind:",
