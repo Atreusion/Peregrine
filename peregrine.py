@@ -70,15 +70,15 @@ sandvich = stuffz.sandvich
 userlist={}
 vendlist=[]
 output_limit={
-'dnd':{'limit':2.0,'last_used':0.0},
-'vend':{'limit':2.0,'last_used':0.0},
-'blend':{'limit':2.0,'last_used':0.0},
-'tweet':{'limit':2.0,'last_used':0.0},
-'tfw':{'limit':2.0,'last_used':0.0},
-'niven':{'limit':2.0,'last_used':0.0},
-'abuse':{'limit':2.0,'last_used':0.0},
-'blame':{'limit':2.0,'last_used':0.0},
-'treat':{'limit':2.0,'last_used':0.0}
+'dnd':{'limit':5.0,'last_used':0.0},
+'vend':{'limit':5.0,'last_used':0.0},
+'blend':{'limit':5.0,'last_used':0.0},
+'tweet':{'limit':5.0,'last_used':0.0},
+'tfw':{'limit':5.0,'last_used':0.0},
+'niven':{'limit':5.0,'last_used':0.0},
+'abuse':{'limit':5.0,'last_used':0.0},
+'blame':{'limit':5.0,'last_used':0.0},
+'treat':{'limit':5.0,'last_used':0.0}
 }
 
 sdw = re.compile("<a href=\"http://en\.wikipedia\.org/wiki/.*\">(.*)</a>")
