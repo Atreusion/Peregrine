@@ -214,35 +214,35 @@ server_data = {
 'irc.chatspike.net' : {
     'port' : 6667,
     'nickname' : 'Peregrine',
-    'channels' : [],#'#uespwiki', '#bots', '#trspam', '#equilibrium', '#Aetherius'],
+    'channels' : [''],#'#uespwiki', '#bots', '#trspam', '#equilibrium', '#Aetherius'],
     'object' : None,
     'password' : None
     },
 'staticfree.foonetic.net' : {
     'port' : 6667,
     'nickname' : 'Peregrine',
-    'channels' : [],#'#bots', '#boats'],
+    'channels' : [''],#'#bots', '#boats'],
     'object' : None,
     'password' : None
     },
 'mindjail.subluminal.net' : {
     'port' : 6667,
     'nickname' : 'Peregrine',
-    'channels' : [],#'#bots', '#boats'],
+    'channels' : [''],#'#bots', '#boats'],
     'object' : None,
     'password' : None
     },
 'verne.freenode.net' : {
     'port' : 6667,
     'nickname' : 'Peregrine',
-    'channels' : [],#'#necrolounge'],
+    'channels' : [''],#'#necrolounge'],
     'object' : None,
     'password' : None
     },
 'atreus11.jtvirc.com' : {
     'port' : 6667,
     'nickname' : 'AtryBot',
-    'channels' : [],#'#atreus11'],
+    'channels' : [''],#'#atreus11'],
     'object' : None,
     'password' : jtvircpass
     }
