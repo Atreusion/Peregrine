@@ -634,7 +634,9 @@ def onPubmsg(connection, event):
             if not vendlist: vendlist = httpget('http://atreus.cahillmanley.com/it-vends/vend.php?action=vend&format=text&count=10').split('\n')
             vend=vendlist.pop()
             if lowm=="!vend": vend='vends %s.' % vend
-            else: vend='blends %s.' % vend
+            else:
+                vend='blends %s.' % vend
+                vend = vend.replace('vending machine','blender').replace('vend','blend')
             connection.action(channel, vend)
         if lowm=='!maiq' or lowm=="!m'aiq":
             choice = random.choice(maiq)
