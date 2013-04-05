@@ -643,7 +643,7 @@ def onPubmsg(connection, event):
             connection.privmsg(channel, choice)
         if lowm=='!dongout' and channel.lower()=='#necrolounge':
             output = ', '.join(userlist[connection.server][channel.lower()])
-            output = output + '! DONGOUT!'
+            output = output + '! It\'s time for a DONGOUT!'
             connection.privmsg(channel, output)
     except:
         if channel.lower()<>'#uespwiki':
