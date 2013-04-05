@@ -214,35 +214,35 @@ server_data = {
 'irc.chatspike.net' : {
     'port' : 6667,
     'nickname' : 'Peregrine',
-    'channels' : ['#uespwiki', '#bots', '#trspam', '#equilibrium', '#Aetherius'],
+#    'channels' : ['#uespwiki', '#bots', '#trspam', '#equilibrium', '#Aetherius'],
     'object' : None,
     'password' : None
     },
 'staticfree.foonetic.net' : {
     'port' : 6667,
     'nickname' : 'Peregrine',
-    'channels' : ['#bots', '#boats'],
+#    'channels' : ['#bots', '#boats'],
     'object' : None,
     'password' : None
     },
 'mindjail.subluminal.net' : {
     'port' : 6667,
     'nickname' : 'Peregrine',
-    'channels' : ['#bots', '#boats'],
+#    'channels' : ['#bots', '#boats'],
     'object' : None,
     'password' : None
     },
 'verne.freenode.net' : {
     'port' : 6667,
     'nickname' : 'Peregrine',
-    'channels' : ['#necrolounge'],
+#    'channels' : ['#necrolounge'],
     'object' : None,
     'password' : None
     },
 'atreus11.jtvirc.com' : {
     'port' : 6667,
     'nickname' : 'AtryBot',
-    'channels' : ['#atreus11'],
+#    'channels' : ['#atreus11'],
     'object' : None,
     'password' : jtvircpass
     }
@@ -923,15 +923,19 @@ def UESP(connection, event):
         ccmds = stuffz.ccmds
         asearch = stuffz.asearch
         cmd, args = (message.split(' ', 1) + ['',''])[:2]
+        if cmd.lower()[1] == 't': cmd_talk = cmd[0] + cmd[2:]
         if ':' in cmd:
             temp = cmd.replace(':',' ',1).split(' ',1)
             cmd = temp[0]
             args = temp[1]+' '+args
-        if args and cmd.lower() in acmds:
+        if args and (cmd.lower() in acmds or cmd_talk.lower() in acmds):
             hi = args.replace(' ','_')
             hi = urllib.urlencode({'':hi})
             hi = hi[1:]
-            url = "%s%s" % (acmds[cmd.lower()], hi)
+            if cmd.lower() in acmds: url = "%s%s" % (acmds[cmd.lower()], hi)
+            elif cmd_talk.lower() in acmds:
+                url = acmds[cmd_talk.lower()][:-1] + '_talk:'
+                url = url + hi
             url = url.replace('%2F','/')
             url = url.replace('%3A',":")
             data = httpget(url)
