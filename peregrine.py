@@ -641,7 +641,7 @@ def onPubmsg(connection, event):
         if lowm=='!maiq' or lowm=="!m'aiq":
             choice = random.choice(maiq)
             connection.privmsg(channel, choice)
-        if lowm=='!dongout' and channel.lower()=='#necrolounge':
+        if lowm.startswith('!dongout') and channel.lower()=='#necrolounge':
             output = ', '.join(userlist[connection.server][channel.lower()])
             output = output + '! It\'s time for a DONGOUT!'
             connection.privmsg(channel, output)
