@@ -923,8 +923,9 @@ def UESP(connection, event):
         ccmds = stuffz.ccmds
         asearch = stuffz.asearch
         cmd, args = (message.split(' ', 1) + ['',''])[:2]
-        if cmd.lower()[1] == 't': cmd_talk = cmd[0] + cmd[2:]
-        else: cmd_talk = 'I HATE GLOBAL VARIABLES AND EVERYTHIGN THEY STAND FOR'
+        if len(cmd) > 2:
+            if cmd.lower()[1] == 't': cmd_talk = cmd[0] + cmd[2:]
+            else: cmd_talk = 'I HATE GLOBAL VARIABLES AND EVERYTHING THEY STAND FOR'
         if ':' in cmd:
             temp = cmd.replace(':',' ',1).split(' ',1)
             cmd = temp[0]
