@@ -926,6 +926,8 @@ def UESP(connection, event):
         if len(cmd) > 2:
             if cmd.lower()[1] == 't': cmd_talk = cmd[0] + cmd[2:]
             else: cmd_talk = 'I HATE GLOBAL VARIABLES AND EVERYTHING THEY STAND FOR'
+        else: cmd_talk = 'I HATE GLOBAL VARIABLES AND EVERYTHING THEY STAND FOR'
+        #PROBABLY A BETTER WAY TO DO THIS BUT FUCK YOU I'M TIRED
         if ':' in cmd:
             temp = cmd.replace(':',' ',1).split(' ',1)
             cmd = temp[0]
