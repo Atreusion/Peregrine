@@ -641,6 +641,10 @@ def onPubmsg(connection, event):
         if lowm=='!maiq' or lowm=="!m'aiq":
             choice = random.choice(maiq)
             connection.privmsg(channel, choice)
+        if lown=='!dongout' and channel.lower()=='#necrolounge':
+            output = ', '.join(userlist[connection.server][channel.lower()])
+            output = output = '! DONGOUT!'
+            connection.privmsg(channel, output)
     except:
         if channel.lower()<>'#uespwiki':
             tits = '\n'.join(traceback.format_exc().splitlines())
