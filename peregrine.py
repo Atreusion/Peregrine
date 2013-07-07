@@ -202,6 +202,9 @@ class twitter_class:
 twitter=twitter_class()
 
 jtvircpass = nickserv['atreus11.jtvirc.com']
+chatspikepass = nickserv['chatspikepass']
+subluminalpass = nickserv['subluminalpass']
+freenodepass = nickserv['freenodepass']
 
 server_data = {
 'irc.nexuswar.com' : {
@@ -211,33 +214,33 @@ server_data = {
     'object' : None,
     'password' : None
     }, # note the comma
-'irc.chatspike.net' : {
-    'port' : 6667,
+'znc.setesh.cahillmanley.com' : {
+    'port' :` 6667,
     'nickname' : 'Peregrine',
     'channels' : ['#uespwiki', '#bots', '#trspam', '#equilibrium', '#Aetherius'],
     'object' : None,
-    'password' : None
+    'password' : chatspikepass
     },
 'staticfree.foonetic.net' : {
     'port' : 6667,
     'nickname' : 'Peregrine',
-    'channels' : ['#bots', '#boats'],
+    'channels' : ['#bots'],
     'object' : None,
     'password' : None
     },
-'mindjail.subluminal.net' : {
+'znc.setesh.cahillmanley.com' : {
     'port' : 6667,
     'nickname' : 'Peregrine',
     'channels' : ['#bots', '#boats'],
     'object' : None,
-    'password' : None
+    'password' : subluminalpass
     },
-'verne.freenode.net' : {
+'znc.setesh.cahillmanley.com' : {
     'port' : 6667,
     'nickname' : 'Peregrine',
     'channels' : ['#necrolounge'],
     'object' : None,
-    'password' : None
+    'password' : freenodepass
     },
 'atreus11.jtvirc.com' : {
     'port' : 6667,
