@@ -215,7 +215,7 @@ server_data = {
     'password' : None
     }, # note the comma
 'chatspikeznc.cahillmanley.com' : {
-    'port' :` 7000,
+    'port' : 7000,
     'nickname' : 'Peregrine',
     'channels' : ['#uespwiki', '#bots', '#trspam', '#equilibrium', '#Aetherius'],
     'object' : None,
