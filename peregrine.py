@@ -215,7 +215,7 @@ server_data = {
     'password' : None
     }, # note the comma
 'chatspikeznc.cahillmanley.com' : {
-    'port' : 7000,
+    'port' : 6667,
     'nickname' : 'Peregrine',
     'channels' : ['#uespwiki', '#bots', '#trspam', '#equilibrium', '#Aetherius'],
     'object' : None,
@@ -229,14 +229,14 @@ server_data = {
     'password' : None
     },
 'subluminalznc.cahillmanley.com' : {
-    'port' : 7000,
+    'port' : 6667,
     'nickname' : 'Peregrine',
     'channels' : ['#bots', '#boats'],
     'object' : None,
     'password' : subluminalpass
     },
 'freenodeznc.cahillmanley.com' : {
-    'port' : 7000,
+    'port' : 6667,
     'nickname' : 'Peregrine',
     'channels' : ['#necrolounge'],
     'object' : None,
