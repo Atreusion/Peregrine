@@ -201,7 +201,7 @@ class twitter_class:
 
 twitter=twitter_class()
 
-jtvircpass = nickserv['atreus11.jtvirc.com']
+twitchircpass = nickserv['irc.twitch.tv']
 chatspikepass = nickserv['chatspikepass']
 subluminalpass = nickserv['subluminalpass']
 freenodepass = nickserv['freenodepass']
@@ -221,20 +221,20 @@ server_data = {
     'object' : None,
     'password' : chatspikepass
     },
-'staticfree.foonetic.net' : {
-    'port' : 6667,
-    'nickname' : 'Peregrine',
-    'channels' : ['#bots'],
-    'object' : None,
-    'password' : None
-    },
-'subluminalznc.cahillmanley.com' : {
-    'port' : 6667,
-    'nickname' : 'Peregrine',
-    'channels' : ['#bots', '#boats'],
-    'object' : None,
-    'password' : subluminalpass
-    },
+#'staticfree.foonetic.net' : {
+#    'port' : 6667,
+#    'nickname' : 'Peregrine',
+#    'channels' : ['#bots'],
+#    'object' : None,
+#    'password' : None
+#    },
+#'subluminalznc.cahillmanley.com' : {
+#    'port' : 6667,
+#    'nickname' : 'Peregrine',
+#    'channels' : ['#bots', '#boats'],
+#    'object' : None,
+#    'password' : subluminalpass
+#    },
 'freenodeznc.cahillmanley.com' : {
     'port' : 6667,
     'nickname' : 'Peregrine',
@@ -242,12 +242,12 @@ server_data = {
     'object' : None,
     'password' : freenodepass
     },
-'atreus11.jtvirc.com' : {
+'irc.twitch.tv' : {
     'port' : 6667,
     'nickname' : 'AtryBot',
     'channels' : ['#atreus11'],
     'object' : None,
-    'password' : jtvircpass
+    'password' : twitchircpass
     }
 }
 
