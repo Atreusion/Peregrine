@@ -78,7 +78,8 @@ output_limit={
 'niven':{'limit':5.0,'last_used':0.0},
 'abuse':{'limit':5.0,'last_used':0.0},
 'blame':{'limit':5.0,'last_used':0.0},
-'treat':{'limit':5.0,'last_used':0.0}
+'treat':{'limit':5.0,'last_used':0.0},
+'seen':{'limit':5.0,'last_used':0.0}
 }
 
 sdw = re.compile("<a href=\"http://en\.wikipedia\.org/wiki/.*\">(.*)</a>")
