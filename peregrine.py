@@ -282,7 +282,10 @@ def onPubmsg(connection, event):
         else:
             seen[nick.lower()]={'secs':time.time(),'action':action,'lines':1}
         if lowm == "!version":
-            connection.privmsg(channel, 'I am version .832g :( (You act like this bot will ever be worthy of a version 1)')
+            connection.privmsg(channel, 'I am version .8346g :( (You act like this bot will ever be worthy of a version 1)')
+    seen[nick.lower()]={'secs':time.time(),'action':action,'lines':1}
+        if lowm == "!github":
+            connection.privmsg(channel, 'https://github.com/Atreus11/Peregrine')
         if lowm.startswith("!wp "):
             args = message[4:]
             args=urllib.urlencode({'' :args})
