@@ -208,17 +208,17 @@ subluminalpass = nickserv['subluminalpass']
 freenodepass = nickserv['freenodepass']
 
 server_data = {
-'irc.nexuswar.com' : {
+#'irc.nexuswar.com' : {
+#    'port' : 6667,
+#    'nickname' : 'Peregrine',
+#    'channels' : ['#bots', '#stagecrew', '#necrolounge'],
+#    'object' : None,
+#    'password' : None
+#    }, # note the comma
+'circ.chatspike.net' : {
     'port' : 6667,
     'nickname' : 'Peregrine',
-    'channels' : ['#bots', '#stagecrew', '#necrolounge'],
-    'object' : None,
-    'password' : None
-    }, # note the comma
-'chatspikeznc.cahillmanley.com' : {
-    'port' : 6667,
-    'nickname' : 'Peregrine',
-    'channels' : ['#uespwiki', '#bots', '#trspam', '#equilibrium', '#Aetherius'],
+    'channels' : ['#uespwiki', '#bots', '#trspam', '#Aetherius'],
     'object' : None,
     'password' : chatspikepass
     },
@@ -236,7 +236,7 @@ server_data = {
 #    'object' : None,
 #    'password' : subluminalpass
 #    },
-'freenodeznc.cahillmanley.com' : {
+'firc.freenode.net' : {
     'port' : 6667,
     'nickname' : 'Peregrine',
     'channels' : ['#necrolounge'],
