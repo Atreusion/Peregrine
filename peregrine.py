@@ -215,7 +215,7 @@ server_data = {
 #    'object' : None,
 #    'password' : None
 #    }, # note the comma
-'circ.chatspike.net' : {
+'irc.chatspike.net' : {
     'port' : 6667,
     'nickname' : 'Peregrine',
     'channels' : ['#uespwiki', '#bots', '#trspam', '#Aetherius'],
@@ -236,7 +236,7 @@ server_data = {
 #    'object' : None,
 #    'password' : subluminalpass
 #    },
-'firc.freenode.net' : {
+'irc.freenode.net' : {
     'port' : 6667,
     'nickname' : 'Peregrine',
     'channels' : ['#necrolounge'],
