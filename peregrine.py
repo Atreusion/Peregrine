@@ -79,8 +79,25 @@ output_limit={
 'abuse':{'limit':5.0,'last_used':0.0},
 'blame':{'limit':5.0,'last_used':0.0},
 'treat':{'limit':5.0,'last_used':0.0},
-'seen':{'limit':5.0,'last_used':0.0}
+'seen':{'limit':5.0,'last_used':0.0},
+'emote':{'limit':5.0,'last_used':0.0}
 }
+
+emote = [""":-)""", """:)""", """:D""", """:o)""", """:]""", """:3""", """:c)""",
+""":>""", """=]""", """8)""", """=)""", """:}""", """:^)""", """:-D""", """8-D""",
+"""8D""", """x-D""", """xD""", """X-D""", """XD""", """=-D""", """=D""", """=-3""",
+"""=3""", """B^D""", """:-))""", """>:[""", """:-(""", """:(""", """""", """:-c""",
+""":c""", """:-<""", """""", """:<""", """:-[""", """:[""", """:{""", """;(""",
+""">:(""", """:@""", """:'-(""", """:'(""", """:'-)""", """:')""", """D:<""",
+"""D:""", """D8""", """D;""", """D=""", """DX""", """v.v""", """D-':""", """>:O""",
+""":-O""", """:O""", """:-o""", """:o""", """8-0""", """O_O""", """o-o""", """O_o""",
+"""o_O""", """o_o""", """O-O""", """0.0""", """o.o""", """O.O""", """o.O""",
+"""O.o""", """0_0""", """:*""", """:^*""", """>:P""", """:-P""", """:P""", """X-P""",
+"""x-p""", """xp""", """XP""", """:-p""", """:p""", """=p""", """:-Þ""", """:Þ""",
+""":þ""", """:-þ""", """:-b""", """:b""", """d:""", """>:\""", """>:/""", """:-/""",
+""":-.""", """:/""", """:\""", """=/""", """=\""", """:L""", """=L""", """:S""",
+""">.<""", """:|""", """:-|""", """:$""", """:-X""", """:X""", """:-#""", """:#""",
+"""O:-)""", """0:-3""", """0:3""", """0:-)""", """0:)""", """0;^)""", """>:)""", """>;)""", """>:-)"""]
 
 sdw = re.compile("<a href=\"http://en\.wikipedia\.org/wiki/.*\">(.*)</a>")
 uespregex = re.compile("<a href=\"/wiki/(.*)\" title=")
@@ -282,9 +299,11 @@ def onPubmsg(connection, event):
         else:
             seen[nick.lower()]={'secs':time.time(),'action':action,'lines':1}
         if lowm == "!version":
-            connection.privmsg(channel, 'I am version .8346g :( (You act like this bot will ever be worthy of a version 1)')
+            connection.privmsg(channel, 'I am version .83466g :( (You act like this bot will ever be worthy of a version 1)')
         if lowm == "!github":
             connection.privmsg(channel, 'https://github.com/Atreus11/Peregrine')
+        if lowm in emote and enabled(connection.server, channel, 'emote'):
+            connection.privmsg(channel, random.choice(emote))
         if lowm.startswith("!wp "):
             args = message[4:]
             args=urllib.urlencode({'' :args})
@@ -791,7 +810,7 @@ def onPrivmsg(connection, event):
         print traceback.format_exc()
     try:
 #        print '<Notice> %s: %s: %s' % (connection.server, nick, message)
-        if lowm.startswith("!login ") and message[7:]==nickserv['verne.freenode.net']:
+        if lowm.startswith("!login ") and message[7:]==nickserv['irc.freenode.net']:
             if not nick in sadminlist and not nick in adminlist:
                 adminlist.append(nick)
                 sadminlist.append(nick)
