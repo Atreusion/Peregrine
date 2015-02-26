@@ -94,8 +94,8 @@ emote = [""":-)""", """:)""", """:D""", """:o)""", """:]""", """:3""", """:c)"""
 """o_O""", """o_o""", """O-O""", """0.0""", """o.o""", """O.O""", """o.O""",
 """O.o""", """0_0""", """:*""", """:^*""", """>:P""", """:-P""", """:P""", """X-P""",
 """x-p""", """xp""", """XP""", """:-p""", """:p""", """=p""", """>;)""", """>:-)""",
-""":-b""", """:b""", """d:""", """>:\"""", """>:/""", """:-/""",
-""":-.""", """:/""", """:\"""", """=/""", """=\"""", """:L""", """=L""", """:S""",
+""":-b""", """:b""", """d:""", """>:\\""", """>:/""", """:-/""", """:d"""
+""":-.""", """:/""", """:\\""", """=/""", """=\\""", """:L""", """=L""", """:S""",
 """>.<""", """:|""", """:-|""", """:$""", """:-X""", """:X""", """:-#""", """:#""",
 """O:-)""", """0:-3""", """0:3""", """0:-)""", """0:)""", """0;^)""", """>:)"""]
 
@@ -302,7 +302,7 @@ def onPubmsg(connection, event):
             connection.privmsg(channel, 'I am version .83466g :( (You act like this bot will ever be worthy of a version 1)')
         if lowm == "!github":
             connection.privmsg(channel, 'https://github.com/Atreus11/Peregrine')
-        if lowm in emote and enabled(connection.server, channel, 'emote'):
+        if message in emote and enabled(connection.server, channel, 'emote'):
             connection.privmsg(channel, random.choice(emote))
         if lowm.startswith("!wp "):
             args = message[4:]
