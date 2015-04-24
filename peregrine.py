@@ -68,7 +68,7 @@ memory = {}
 niven = stuffz.niven
 sandvich = stuffz.sandvich
 userlist={}
-vendlist=[]
+vendlist=stuffz.vendlist
 output_limit={
 'dnd':{'limit':5.0,'last_used':0.0},
 'vend':{'limit':5.0,'last_used':0.0},
@@ -656,9 +656,7 @@ def onPubmsg(connection, event):
             else:
                 connection.privmsg(channel, 'Sorry, but the OAuth credentials have disappeared.  Bug Atreus to fix this.')
         if (lowm=='!vend' and enabled(connection.server, channel, 'vend')) or (lowm=='!blend' and enabled(connection.server, channel, 'blend')):
-            global vendlist
-            if not vendlist: vendlist = httpget('http://atreus.cahillmanley.com/it-vends/vend.php?action=vend&format=text&count=10').split('\n')
-            vend=vendlist.pop()
+            vend = random.choice(vendlist)
             if lowm=="!vend": vend='vends %s.' % vend
             else:
                 vend='blends %s.' % vend
