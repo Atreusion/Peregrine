@@ -97,7 +97,8 @@ emote = [""":-)""", """:)""", """:D""", """:o)""", """:]""", """:3""", """:c)"""
 """:-b""", """:b""", """d:""", """>:\\""", """>:/""", """:-/""", """:d"""
 """:-.""", """:/""", """:\\""", """=/""", """=\\""", """:L""", """=L""", """:S""",
 """>.<""", """:|""", """:-|""", """:$""", """:-X""", """:X""", """:-#""", """:#""",
-"""O:-)""", """0:-3""", """0:3""", """0:-)""", """0:)""", """0;^)""", """>:)"""]
+"""O:-)""", """0:-3""", """0:3""", """0:-)""", """0:)""", """0;^)""", """>:)""",
+""">.>""", """<.<""", """:V"""]
 
 sdw = re.compile("<a href=\"http://en\.wikipedia\.org/wiki/.*\">(.*)</a>")
 uespregex = re.compile("<a href=\"/wiki/(.*)\" title=")
@@ -715,27 +716,6 @@ def remove_dups(L):
 #Python has 002 quote types.
 
 
-def dots(connection, event):
-    message = event.arguments()[0]
-    channel = event.target()
-    lowm = message.lower()
-    nick = irclib.nm_to_n(event.source())
-    nick = ''.join(nick)
-    match = re.search("^\.+$", message, re.IGNORECASE)
-    if match != None and enabled(connection.server, channel, 'dots'):
-        dots = ['Dark`Star quickly unzips his pants.', 'Rick Astley shifts uncomfortably.', 'You suddenly realize how boring this conversation is.',
-        'You suddenly realize it is unnaturally quiet.', 'Hannerz ogles disconcertingly.', 'You quickly discover one of you has an erection.',
-        'You hear the muffled yells of a Mac user being ignored.', 'You hear the shrill screams of an emo kid getting the sense beat into them.',
-        'You suddenly realize TylerRilm is nekkid.', "Save your breath $who, you'll need it to blow up your date.", "I am $who's colon.  I get cancer.  I kill $who.",
-        'Everybody points and laughs at $who.', "You enjoy the sweet smell of $who's hopes and dreams burning.", "$who and $someone, sitting in a tree...",
-        'Peregrine quickly looks up.', 'Peregrine quickly pulls his pants up.', 'Peregrine stares at the wall.', 'Peregrine runs into the nearest wall.',
-        'Peregrine syntax errors.', 'Oh, baby.', '$who doesn\'t like $someone anymore. :(', 'Peregrine blames $who for everything.', 'Peregrine blames $someone for everything.']
-        args = random.choice(dots)
-        args = args.replace('$who', nick)
-        args = args.replace('$someone', random.choice(userlist[connection.server][channel.lower()]))
-        connection.privmsg(channel, '[%s]' % (args, ))
-
-
 def splitsmart(msg, chunksize=350):
     """Splits a string msg into entries in a list with less than chunksize characters."""
     outputlist = []
@@ -810,7 +790,7 @@ def onPrivmsg(connection, event):
         print traceback.format_exc()
     try:
 #        print '<Notice> %s: %s: %s' % (connection.server, nick, message)
-        if lowm.startswith("!login ") and message[7:]==nickserv['irc.freenode.net']:
+        if lowm.startswith("!login ") and message[7:]==nickserv['freenodepass']:
             if not nick in sadminlist and not nick in adminlist:
                 adminlist.append(nick)
                 sadminlist.append(nick)
@@ -1158,7 +1138,7 @@ def ping(server_object, server):
         try:
             try:
                 #3 try statements makes me feel dirty and kinky
-                #not worse than anyhting else I do on this bot, though
+                #not worse than anything else I do on this bot, though
                 server_object.connect(server, port, nickname, ircname="Peregrine.  Owned by Atreus.", password = server_password)
             except:
                 server_object.connect(server, port, nickname, password = server_password)
