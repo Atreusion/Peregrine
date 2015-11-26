@@ -236,7 +236,7 @@ server_data = {
 'irc.chatspike.net' : {
     'port' : 6667,
     'nickname' : 'Peregrine',
-    'channels' : ['#uespwiki', '#bots', '#trspam', '#Aetherius'],
+    'channels' : ['#uespwiki', '#bots', '#trspam'],
     'object' : None,
     'password' : chatspikepass
     },
@@ -257,7 +257,7 @@ server_data = {
 'irc.freenode.net' : {
     'port' : 6667,
     'nickname' : 'Peregrine',
-    'channels' : ['#necrolounge'],
+    'channels' : ['#necrolounge','#dongs'],
     'object' : None,
     'password' : freenodepass
     },
