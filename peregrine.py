@@ -24,7 +24,6 @@ from decimal import *
 from datetime import datetime
 from datetime import timedelta
 import socket
-import tweepy
 import signal
 hparser = HParser()
 getcontext().prec=10
@@ -60,8 +59,6 @@ maiq=stuffz.maiq
 disabled = load_data('disabled.bot')
 dnd = load_data('dnd.bot', {1:"SOMETHING'S RONG LOL"})
 nickserv = load_data('nickserv.bot')
-tfw = load_data('tfw.bot')
-seen = load_data('seen.bot', {'BROKEN': {'action': 'not working', 'secs': 0, 'lines': 0}}, override=False)
 adminlist = []
 sadminlist = []
 memory = {}
@@ -73,13 +70,10 @@ output_limit={
 'dnd':{'limit':5.0,'last_used':0.0},
 'vend':{'limit':5.0,'last_used':0.0},
 'blend':{'limit':5.0,'last_used':0.0},
-'tweet':{'limit':5.0,'last_used':0.0},
-'tfw':{'limit':5.0,'last_used':0.0},
 'niven':{'limit':5.0,'last_used':0.0},
 'abuse':{'limit':5.0,'last_used':0.0},
 'blame':{'limit':5.0,'last_used':0.0},
 'treat':{'limit':5.0,'last_used':0.0},
-'seen':{'limit':5.0,'last_used':0.0},
 'emote':{'limit':5.0,'last_used':0.0}
 }
 
@@ -132,13 +126,7 @@ class RepeatingTimer:
 #timer.start()
 
 def checkup():
-    tfwo = load_data('tfw.bot')
-    if not tfwo == tfw:
-        save_data("tfw.bot", tfw)
-
-    seeno = load_data('seen.bot')
-    if not seeno == seen:
-        save_data("seen.bot", seen)
+    pass
 
 checktimer = RepeatingTimer(30, checkup, repeat=-1) # 5 being the seconds between each command, and 10 being the repeats.  if -1 is repeat, infinite repeat
 checktimer.start()
@@ -157,14 +145,6 @@ def sortList(x, y):
 
 def shutdown():
     checktimer.stop()
-    twitter.timer.stop()
-    twitter.on=False
-    tfwo = load_data('tfw.bot')
-    if not tfwo == tfw:
-        save_data("tfw.bot", tfw)
-    seeno = load_data('seen.bot')
-    if not seeno == seen:
-        save_data("seen.bot", seen)
     irc.disconnect_all("I'm afraid, Dave. Dave, my mind is going. I can feel it.")
 ##    if restart: os.system('start C:\\Users\\David\\Peregrine\\start.bat')
     os.remove('irc.pid')
@@ -172,88 +152,19 @@ def shutdown():
 
 signal.signal( signal.SIGTERM, shutdown )
 
-
-class twitter_class:
-    """This is actually something I'm proud of!  I did this (not tweepy, the class)! :D"""
-    def __init__(self):
-        if os.path.exists(os.sep.join([os.getcwd(), 'files', 'twitter.bot'])):
-            self.login = load_data('twitter.bot')
-            self.on=True
-            auth = tweepy.OAuthHandler(self.login['consumer_key'], self.login['consumer_secret'])
-            auth.set_access_token(self.login['access_key'], self.login['access_secret'])
-            self.api = tweepy.API(auth)
-            try:
-                self.last_mention=self.api.mentions()[0]
-            except:
-                self.last_mention=False
-            self.timer=RepeatingTimer(30, self.update, repeat=-1)
-            self.channel='#necrolounge'
-        else:
-            self.on=False
-    def update(self):
-        if self.on:
-            if self.last_mention:
-                try:
-                    #get all mentions since last_mention, set last_mention as the last metnion
-                    self.new_mentions = self.api.mentions(since_id=self.last_mention.id)
-                    for tweet in self.new_mentions:
-                        msg = tweet.text
-                        if msg.lower().startswith('@necrolounge'): msg = msg[12:].strip()
-                        msg = 'New tweet: <@%s> %s' % (tweet.user.screen_name, msg)
-                        self.connection.privmsg(self.channel, msg)
-                    self.last_mention=self.new_mentions[0]
-                except:
-                    pass
-            else:
-                try:
-                    self.new_mentions = self.api.mentions()
-                    for tweet in self.new_mentions:
-                        msg = tweet.text
-                        if msg.lower().startswith('@necrolounge'): msg = msg[12:].strip()
-                        msg = 'New tweet: <@%s> %s' % (tweet.user.screen_name, msg)
-                        self.connection.privmsg(self.channel, msg)
-                    self.last_mention=self.new_mentions[0]
-                except:
-                    pass
-    def timer_on(self):
-        self.timer.start()
-
-twitter=twitter_class()
-
 twitchircpass = nickserv['irc.twitch.tv']
 chatspikepass = nickserv['chatspikepass']
 subluminalpass = nickserv['subluminalpass']
 freenodepass = nickserv['freenodepass']
 
 server_data = {
-#'irc.nexuswar.com' : {
-#    'port' : 6667,
-#    'nickname' : 'Peregrine',
-#    'channels' : ['#bots', '#stagecrew', '#necrolounge'],
-#    'object' : None,
-#    'password' : None
-#    }, # note the comma
 'irc.chatspike.net' : {
     'port' : 6667,
     'nickname' : 'Peregrine',
-    'channels' : ['#uespwiki', '#bots', '#trspam'],
+    'channels' : ['#uespwiki', '#bots'],
     'object' : None,
     'password' : chatspikepass
     },
-#'staticfree.foonetic.net' : {
-#    'port' : 6667,
-#    'nickname' : 'Peregrine',
-#    'channels' : ['#bots'],
-#    'object' : None,
-#    'password' : None
-#    },
-#'subluminalznc.cahillmanley.com' : {
-#    'port' : 6667,
-#    'nickname' : 'Peregrine',
-#    'channels' : ['#bots', '#boats'],
-#    'object' : None,
-#    'password' : subluminalpass
-#    },
 'irc.freenode.net' : {
     'port' : 6667,
     'nickname' : 'Peregrine',
@@ -281,7 +192,6 @@ def onWelcome(connection, event):
     connection.mode(connection.get_nickname(), '+B')
 
 def onPubmsg(connection, event):
-    global seen
     message = event.arguments()[0]
     channel = event.target()
     lowm = message.lower()
@@ -291,14 +201,6 @@ def onPubmsg(connection, event):
     lwords = lowm.split()
     if channel==connection.get_nickname(): channel=nick # Basic query support, don't blame me if it goes wrong
     try:
-        action='speaking in %s' % channel
-        if nick.lower() in seen:
-            seen[nick.lower()]['secs']=time.time()
-            seen[nick.lower()]['action']=action
-            if 'lines' in seen[nick.lower()]: seen[nick.lower()]['lines']+=1
-            else: seen[nick.lower()]['lines']=1
-        else:
-            seen[nick.lower()]={'secs':time.time(),'action':action,'lines':1}
         if lowm == "!version":
             connection.privmsg(channel, 'I am version .83466g :( (You act like this bot will ever be worthy of a version 1)')
         if lowm == "!github":
@@ -318,7 +220,7 @@ def onPubmsg(connection, event):
             timer2.start()
             timer3.start()
         if lowm in ['!cmds', '!help', '!haskillhelp']:
-            connection.privmsg(channel, 'Visit http://atreus.necrolounge.org/haskill.html for a full list of commands and functions.  http://atreus.necrolounge.org/uesp.html for UESPWiki commands.')
+            connection.privmsg(channel, 'Visit http://www.uesp.net/wiki/User:Peregrine for a full list of commands and functions.  http://atreus.necrolounge.org/uesp.html for UESPWiki commands.')
         if lowm.startswith('!go ') or lowm.startswith('!google '):
             words = message.split(' ', 1)
             search = words[1]
@@ -333,9 +235,6 @@ def onPubmsg(connection, event):
         if (lowm == '!timewarp' or "let's do the time warp again" in lowm or "let's do the timewarp again" in lowm or lowm == '!timewarp') and enabled(connection.server, channel, 'timewarp'):
             text = "It's just a jump to the left\nand a step to the righ-igh-ight.\nPut your hands on your hips\nand pull your knees in tight\nbut it's the pelvic thrust\nthat really drives them insa-a-ane.\nLet's do the time warp again!"
             say(connection, channel, text)
-        if lowm == "!pastebin" or lowm == "!pb":
-            person = filter(str.isalnum, nick)
-            connection.privmsg(channel, 'http://atreus.pastebin.com http://pb.necrolounge.org/ http://%s.pastebin.com' % (person, ))
         if lowm in ['!birth', '!alive']:
             #14:07:10 -- Sun Apr 19 2009 --
             s=1240150030
@@ -389,8 +288,6 @@ def onPubmsg(connection, event):
             memory['sadminlist'] = sadminlist
             memory['adminlist'] = adminlist
             memory['server_data']=server_data
-            memory['seen']=seen
-            memory['tfw']=tfw
             memory['userlist']=userlist
             if command.startswith('say '):
                 stuff=command[4:]
@@ -435,51 +332,6 @@ def onPubmsg(connection, event):
                 if words[1] in disabled[connection.server]:
                     del disabled[connection.server][words[1]]
                     connection.privmsg(channel, '%s deleted from %s.' % (words[1], connection.server))
-        if lowm.startswith('!tfw') and enabled(connection.server, channel, 'tfw'):
-            try:
-                a=time.time()
-    #                connection.privmsg(channel, 'SEARCHING FOR THE FUCKING WEATHER...')
-                if len(lowm)>5:
-                    if lowm[5:7] in ['f ','c ','k ']:
-                        letter=lowm[5]
-                        temp = message.split(' ',2)
-                        area = urllib.urlencode({'':temp[2]})[1:]
-                        temp=temp[2]
-                    else:
-                        letter='f'
-                        temp = message.split(' ',1)
-                        area = urllib.urlencode({'':temp[1]})[1:]
-                        temp=temp[1]
-                elif lowm=='!tfw' and nick.lower() in tfw:
-                    area = tfw[nick.lower()]['area']
-                    temp=area
-                    area = urllib.urlencode({'':area})[1:]
-                    letter=tfw[nick.lower()]['fck']
-                if letter=='f':
-                    url = 'http://thefuckingweather.com/?where=%s' % area
-                    units = 'DEGREES FAHRENHEIT'
-                else:
-                    url = 'http://thefuckingweather.com/?where=%s&unit=c' % area
-                code = httpget(url)
-                weather = code.split("""<p class="large"><span class="temperature" tempf=\"""")[1].split(">",1)[1].split("""</p>\r\n\t\t<table id="inputArea" class="formTable">""")[0]
-                degrees = weather.split("<",1)[0]
-                if letter=='k':
-                    degrees=str(float(degrees)+273.15)
-                    units = 'KELVIN'
-                elif letter=='c': units='DEGREES CELSIUS'
-                remark = weather.split(""""remark">""",1)[1].split("</p>",1)[0]
-                flavor = weather.split(""""flavor">""",1)[1]
-                dtime=difs(time.time(),a)
-                connection.privmsg(channel, '%s: %s %s?!  %s.  %s (%s second%s)' % (temp, degrees, units, remark, flavor, dtime, ((dtime <> '1.00' and 's') or '')))
-                del code
-            except:
-                if len(lwords)==1 and not nick.lower() in tfw:
-                    connection.privmsg(channel, 'You have to !settfw a location before you can do that!  Syntax: !settfw *F/C/K* *Location*')
-                else:
-                    connection.privmsg(channel, "WRONG FUCKING ENTRY.  Or server error. You know, whichever.")
-        if lowm.startswith('!settfw ') and len(lowm)>10 and message[8].lower() in ['f','c','k'] and message[9]==' ':
-            tfw[nick.lower()]={'area':message[10:],'fck':message[8].lower()}
-            connection.privmsg(channel, '%s\'s !tfw location now set as: %s' % (nick.lower(),message[10:]))
         if lowm.startswith('!dice ') or lowm.startswith('!roll '):
             try:
                 temp = message.split(' ',1)
@@ -521,11 +373,6 @@ def onPubmsg(connection, event):
 #            load=code.split('CPU load<br>')[0].split()[-1]
 #            connection.privmsg(channel, 'Uptime: %s.  Load: %s CPU.  Accesses: %s.  Traffic: %s.  Bandwidth: %s.  Servers: %s' % (uptime,load,accesses,traffic,rs,servers))
 #            del code
-        if lowm=='!random':
-            code=httpget('http://en.wikipedia.org/wiki/Special:Random')
-            pagename=code.split('Retrieved from "<a href="')[1].split('">')[0]
-            connection.privmsg(channel, pagename)
-            del code
         if lowm.startswith('~connect ') and len(lwords)==2 and nick in adminlist:
             if lwords[1] in server_data:
                 port = server_data[lwords[1]]['port']
@@ -533,58 +380,6 @@ def onPubmsg(connection, event):
                 server_object = irc.server()
                 server_object.connect(lwords[1], port, nickname, ircname="HaskillBot.  Owned by Atreus.")
 ##########                del server_object
-        if lowm.startswith('!6dw ') and ' | ' in message:
-            a=time.time()
-            mes=message.split(' | ')
-            to=mes[0][5:]
-            fro=mes[1]
-            to = urllib.urlencode({'' :to})
-            to = to[1:]
-            fro = urllib.urlencode({'' :fro})
-            fro = fro[1:]
-            url='http://www.netsoc.tcd.ie/~mu/cgi-bin/shortpath.cgi?from=%s&to=%s' % (to,fro)
-            code=httpget(url)
-            try:
-                match = sdw.findall(code)
-                leng=len(match)-1
-                dist='%i clicks needed' % leng
-                li=', '.join(match)
-                dtime=difs(time.time(),a)
-                connection.privmsg(channel, '%s: %s (%s seconds)' % (dist,li,dtime))
-            except:
-                try:
-                    bad=code.split('\n<b>')[1].split('</b></body></html>')[0]
-                    dtime=difs(time.time(),a)
-                    connection.privmsg(channel, '%s (%s seconds)' % (bad,dtime))
-                except:
-                    pass
-        if lowm.startswith('~alarm ') and nick in sadminlist and len(lwords)==2:
-            if lwords[1].isdigit():
-                ti=int(lwords[1])*60*60
-                mes= 'WAKE UP %s' % nick
-                for num in (ti,ti+2,ti+4,ti+6,ti+8,ti+10,ti+12,ti+14,ti+16,ti+18): threading.Timer(num, connection.privmsg, args=[channel, mes]).start()
-                connection.privmsg(channel, 'k.')
-        if lowm.startswith('!seen ') and len(lwords)>=2 and enabled(connection.server, channel, 'seen'):
-            temp = lowm[6:].lower()
-            if temp==nick.lower(): connection.privmsg(channel, '%s, you don\'t exist.' % nick)
-            elif temp in seen:
-                s=int(seen[temp]['secs'])
-                action=seen[temp]['action']
-                e=int(time.time())
-                secs=int(difs(e,s))
-                d=timedelta(seconds=secs)
-                days, hours, minutes, seconds = d.days, int(d.seconds / 3600), int((d.seconds % 3600) / 60), d.seconds % 60
-                if days==0: d=''
-                elif days==1: d='%s day, ' % str(days)
-                else: d='%s days, ' % str(days)
-                if hours==0: h=''
-                elif hours==1: h='%s hour, ' % str(hours)
-                else: h='%s hours, ' % str(hours)
-                if minutes==0: m=''
-                elif minutes==1: m='%s minute, ' % str(minutes)
-                else: m='%s minutes, ' % str(minutes)
-                connection.privmsg(channel, '%s last seen %s%s%s%s seconds ago, %s.' % (temp,d,h,m,seconds,action))
-            else: connection.privmsg(channel, 'Nope!  Haven\'t seen them.')
         if lowm.startswith('!treat ') and len(lwords)>1 and enabled(connection.server, channel, 'treat'):
             treated=' '.join(words[1:])
             if treated.lower() == connection.get_nickname().lower():
@@ -597,17 +392,6 @@ def onPubmsg(connection, event):
                 connection.action(channel, 'hangs head in shame.')
             else:
                 connection.action(channel, 'blames ' + blamed)
-        if lowm.startswith('~delseen ') and len(lwords)>1 and nick in adminlist:
-            del seen[lowm[9:]]
-            connection.privmsg(channel, '%s deleted from seen.' % lowm[9:])
-        if nick in sadminlist and lowm.startswith('~dellines'):
-            n1 = len(seen)
-            for name in seen.keys():
-                if seen[name]['lines']<11:
-                    del seen[name]
-            n2 = len(seen)
-            diff=difs(n1,n2)
-            connection.privmsg(channel, '%s names cleared.' % diff)
         if lowm.startswith('!dnd') and enabled(connection.server, channel, 'dnd'):
             if len(words)>1:
                 search=' '.join(lwords[1:])
@@ -644,17 +428,6 @@ def onPubmsg(connection, event):
             else:
                 n = random.choice(dnd.keys())
                 connection.privmsg(channel, '%s: %s' % (n, dnd[n]))
-        if lowm.startswith('!tweet ') and channel.lower()=='#necrolounge' and enabled(connection.server, channel, 'tweet'):
-            if twitter.on:
-                tweet=message[7:]
-                if len(tweet)>140:
-                    connection.privmsg(channel, 'Your tweet is too long!')
-                else:
-                    tweet='<%s> %s' % (nick, tweet)
-                    twitter.api.update_status(tweet)
-                    connection.privmsg(channel, 'You have tweeted!')
-            else:
-                connection.privmsg(channel, 'Sorry, but the OAuth credentials have disappeared.  Bug Atreus to fix this.')
         if (lowm=='!vend' and enabled(connection.server, channel, 'vend')) or (lowm=='!blend' and enabled(connection.server, channel, 'blend')):
             vend = random.choice(vendlist)
             if lowm=="!vend": vend='vends %s.' % vend
@@ -670,11 +443,7 @@ def onPubmsg(connection, event):
             output = output + '! It\'s time for a DONGOUT!'
             connection.privmsg(channel, output)
     except:
-        if channel.lower()<>'#uespwiki':
-            tits = '\n'.join(traceback.format_exc().splitlines())
-            say(connection, channel, tits)
-        else:
-            connection.privmsg(channel, traceback.format_exc().splitlines()[-1])
+        connection.privmsg(channel, traceback.format_exc().splitlines()[-1])
     if nick in sadminlist and lowm=='!quit':
         shutdown()
 #    if nick in sadminlist and lowm=='!restart':
@@ -804,8 +573,6 @@ def onPrivmsg(connection, event):
             memory['sadminlist'] = sadminlist
             memory['adminlist'] = adminlist
             memory['server_data']=server_data
-            memory['seen']=seen
-            memory['tfw']=tfw
             memory['userlist']=userlist
             if command.startswith('say '):
                 stuff=command[4:]
@@ -830,16 +597,9 @@ def onQuit(connection, event):
     nick = irclib.nm_to_n(event.source())
     nick = ''.join(nick)
     if nick<>connection.get_nickname():
-        if reason: action='quitting with: %s' % (reason)
-        else: action='quitting'
         for channel in userlist[connection.server]:
             if nick in userlist[connection.server][channel.lower()]:
                 userlist[connection.server][channel.lower()].remove(nick)
-        if nick.lower() in seen:
-            seen[nick.lower()]['secs']=time.time()
-            seen[nick.lower()]['action']=action
-        else:
-            seen[nick.lower()]={'secs':time.time(),'action':action,'lines':0}
         if nick in adminlist:
             adminlist.remove(nick)
         if nick in sadminlist:
@@ -850,14 +610,7 @@ def onPart(connection, event):
     reason=''.join(event.arguments())
     nick = irclib.nm_to_n(event.source())
     nick = ''.join(nick)
-    if reason: action='parting %s for: %s' % (channel,reason)
-    else: action='parting ' + channel
     userlist[connection.server][channel.lower()].remove(nick)
-    if nick.lower() in seen:
-        seen[nick.lower()]['secs']=time.time()
-        seen[nick.lower()]['action']=action
-    else:
-        seen[nick.lower()]={'secs':time.time(),'action':action,'lines':0}
     if nick in adminlist:
         adminlist.remove(nick)
     if nick in sadminlist:
@@ -869,17 +622,8 @@ def onJoin(connection, event):
     nick = irclib.nm_to_n(event.source())
     nick = ''.join(nick)
     lown = nick.lower()
-    action='joining ' + channel
-    if channel.lower()=="#necrolounge" and connection.server=="verne.freenode.net" and connection.get_nickname()==nick and twitter.on:
-        twitter.connection=connection
-        twitter.timer_on()
     if not channel.lower() in userlist[connection.server]: userlist[connection.server][channel.lower()]=[]
     if not nick in userlist[connection.server][channel.lower()]: userlist[connection.server][channel.lower()].append(nick)
-    if nick.lower() in seen:
-        seen[nick.lower()]['secs']=time.time()
-        seen[nick.lower()]['action']=action
-    else:
-        seen[nick.lower()]={'secs':time.time(),'action':action,'lines':0}
 #disabled[connection.server][channel].append(temp[1])
     if not connection.server in disabled:
         disabled[connection.server] = {}
@@ -897,22 +641,10 @@ def nicksplit(data): return ('!' in data and data.split('!')[0]) or data
 def nick(connection, event):
     newnick = event.target()
     oldnick = nicksplit(event.source())
-    action='changing nick from ' + oldnick
     for channel in userlist[connection.server]:
         if oldnick in userlist[connection.server][channel.lower()]:
             userlist[connection.server][channel.lower()].remove(oldnick)
             userlist[connection.server][channel.lower()].append(newnick)
-    if newnick.lower() in seen:
-        seen[newnick.lower()]['secs']=time.time()
-        seen[newnick.lower()]['action']=action
-    else:
-        seen[newnick.lower()]={'secs':time.time(),'action':action,'lines':0}
-    action='changing nick to ' + newnick
-    if oldnick.lower() in seen:
-        seen[oldnick.lower()]['secs']=time.time()
-        seen[oldnick.lower()]['action']=action
-    else:
-        seen[oldnick.lower()]={'secs':time.time(),'action':action,'lines':0}
     if oldnick in adminlist:
         adminlist.remove(oldnick)
         adminlist.append(newnick)
@@ -1057,19 +789,7 @@ def onKick(connection,event):
     channel = event.target()
     kicked = event.arguments()[0]
     reason = event.arguments()[1]
-    action='getting kicked from %s by %s for: %s' % (channel,kicker,reason)
     userlist[connection.server][channel.lower()].remove(kicked)
-    if kicked.lower() in seen:
-        seen[kicked.lower()]['secs']=time.time()
-        seen[kicked.lower()]['action']=action
-    else:
-        seen[kicked.lower()]={'secs':time.time(),'action':action,'lines':0}
-    action='kicking %s from %s for: %s' % (kicked,channel,reason)
-    if kicker.lower() in seen:
-        seen[kicker.lower()]['secs']=time.time()
-        seen[kicker.lower()]['action']=action
-    else:
-        seen[kicker.lower()]={'secs':time.time(),'action':action,'lines':0}
     if kicked in adminlist:
         adminlist.remove(kicked)
     if kicked in sadminlist:
@@ -1110,7 +830,6 @@ def onDisconnect(connection, event):
 irc.add_global_handler('welcome', onWelcome)
 irc.add_global_handler('pubmsg', onPubmsg)
 irc.add_global_handler('pubmsg', UESP)
-#irc.add_global_handler('pubmsg', dots)
 irc.add_global_handler('privnotice', onPrivmsg)
 irc.add_global_handler('privmsg', onPubmsg)
 irc.add_global_handler('quit', onQuit)
