@@ -14,6 +14,13 @@ class MyClient(pydle.Client):
     def on_join(self, channel, user):
         super().on_join(channel, user)
         self.message(channel, 'Hey there, {user}!', user=user)
+    
+    @pydle.coroutine
+    def on_message(self, target, source, message):
+        super().on_message(target, source, message)
+        if message == "!disconnect"
+            self.disconnect()
+        
 
 # Setup pool and connect clients.
 pool = pydle.ClientPool()
