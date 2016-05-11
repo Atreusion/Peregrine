@@ -27,8 +27,8 @@ pool = pydle.ClientPool()
 servers = ['irc.chatspike.net',]
 
 for server in servers:
-    client = pydle.Client('Peregrine3')
-    pool.connect(client, server, tls=True)
+    client = pydle.MyClient('Peregrine3', realname = "testbot")
+    pool.connect(client, server, 6697, tls=True)
 
 # Handle all clients in the pool at once.
 pool.handle_forever()
