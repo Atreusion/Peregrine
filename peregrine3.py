@@ -18,7 +18,7 @@ class MyClient(pydle.Client):
     @pydle.coroutine
     def on_message(self, target, source, message):
         super().on_message(target, source, message)
-        if message == "!disconnect"
+        if message == "!disconnect":
             self.disconnect()
         
 
