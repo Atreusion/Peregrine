@@ -4,6 +4,63 @@ import sys
 import bot_container
 import random
 import time
+import cPickle
+import os
+
+# Want to combine output_limit and disabled.  Have it be:
+# {'script' : {'disabled_on' : ['servername#channel',''], 'limit' : 5.0, 'last_used' : 0.0}}
+# Have a local file, load it on startup, save whenever changed
+def enabled(server, channel, script):
+    sc = server + channel
+    if sc in disabled[script]['disabled_on']:
+        return False
+    else:
+        now = time.time()
+        last_time = disabled[script]['last_used']
+    
+    
+    
+    if server in disabled:
+        if channel.lower() in disabled[server]:
+            if script in disabled[server][channel.lower()]:
+                 return False
+            else:
+                 enable =  True
+        else:
+            enable =  True
+    else:
+        enable = True
+    if script in output_limit.keys() and enable:
+        now = time.time()
+        last_time = output_limit[script]['last_used']
+        dtime=difs(now, last_time)
+        if float(dtime) > output_limit[script]['limit']:
+            enable = True
+            output_limit[script]['last_used'] = now
+        else: enable = False
+    return enable
+
+def load_data( filename, default={}, override=True ):
+    """
+    some_list = load_data('some_list.bot', ['default', 'list'])
+    """
+    path = os.sep.join([os.getcwd(), 'files', filename])
+    if os.path.exists(path):
+        f = open(path, 'r')
+        try:
+            data = cPickle.load(f)
+            f.close()
+            return data
+        except EOFError:
+            if override: return default
+    return default
+
+def save_data( filename, data ):
+    """
+    save_data("some_list.bot", some_list)
+    """
+    path = os.sep.join([os.getcwd(), 'files', filename])
+    with open( path, 'w' ) as f: cPickle.dump(data, f)
 
 server_data = {
 'irc.chatspike.net' : {
@@ -29,6 +86,8 @@ server_data = {
 #    'password' : None
 #    }
 }
+
+disabled = load_data('disabled.bot')
 
 class MyClient(pydle.Client):
     def on_connect(self):
@@ -60,30 +119,6 @@ class MyClient(pydle.Client):
     def on_raw(self, message):
         super().on_raw(message)
         print(message)
-
-# Want to combine output_limit and disabled.  Have it be:
-# {'script' : {'disabled_on' : ['servername#channel',''], 'limit' : blah}}
-# Have a local file, load it on startup, save whenever changed
-def enabled(server, channel, script):
-    if server in disabled:
-        if channel.lower() in disabled[server]:
-            if script in disabled[server][channel.lower()]:
-                 return False
-            else:
-                 enable =  True
-        else:
-            enable =  True
-    else:
-        enable = True
-    if script in output_limit.keys() and enable:
-        now = time.time()
-        last_time = output_limit[script]['last_used']
-        dtime=difs(now, last_time)
-        if float(dtime) > output_limit[script]['limit']:
-            enable = True
-            output_limit[script]['last_used'] = now
-        else: enable = False
-    return enable
 
 # Setup pool and connect clients.
 pool = pydle.ClientPool()
