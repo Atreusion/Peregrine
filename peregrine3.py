@@ -1,5 +1,9 @@
 # 19:37:58 Thursday, May 12, 2016
 import pydle
+import sys
+import bot_container
+import random
+import time
 
 server_data = {
 'irc.chatspike.net' : {
@@ -48,18 +52,44 @@ class MyClient(pydle.Client):
             print("IT WORKS I GUESS")
             for client in pool:
                 self.disconnect(client)
-            exit()
+            sys.exit(0)
+        if low_message == "!github":
+            self.message(channel, "https://github.com/Atreusion/Peregrine/")
+#        if message in bot_container.emote and enabled(self.connection.hostname, channel, 'emote'):
+#            self.message(channel, random.choice(bot_container.emote))
     def on_raw(self, message):
         super().on_raw(message)
         print(message)
 
+# Want to combine output_limit and disabled.  Have it be:
+# {'script' : {'disabled_on' : ['servername#channel',''], 'limit' : blah}}
+# Have a local file, load it on startup, save whenever changed
+def enabled(server, channel, script):
+    if server in disabled:
+        if channel.lower() in disabled[server]:
+            if script in disabled[server][channel.lower()]:
+                 return False
+            else:
+                 enable =  True
+        else:
+            enable =  True
+    else:
+        enable = True
+    if script in output_limit.keys() and enable:
+        now = time.time()
+        last_time = output_limit[script]['last_used']
+        dtime=difs(now, last_time)
+        if float(dtime) > output_limit[script]['limit']:
+            enable = True
+            output_limit[script]['last_used'] = now
+        else: enable = False
+    return enable
+
 # Setup pool and connect clients.
 pool = pydle.ClientPool()
-
 for server in server_data:
     client = MyClient(server_data[server]['nickname'])
     pool.connect(client, server, tls=server_data[server]['tls'], password=server_data[server]['server_password'])
-
 # Handle all clients in the pool at once.
 try:
     pool.handle_forever()
