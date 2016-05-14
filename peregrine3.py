@@ -62,7 +62,7 @@ class RepeatingTimer:
         if self._timer: self._timer.cancel()
     def run(self):
         try: self.function(*self.args, **self.kwargs)
-        except: print traceback.format_exc()
+        except: print(traceback.format_exc())
         if self.repeat == -1:
             self.start()
         elif self.repeat > 0:
