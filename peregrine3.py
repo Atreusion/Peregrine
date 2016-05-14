@@ -111,20 +111,23 @@ class MyClient(pydle.Client):
     @pydle.coroutine
     def on_message(self, channel, user, message):
         super().on_message(channel, user, message)
-        low_message = message.lower()
-        if low_message.startswith('!test'):
-            self.message(channel, "%s, this is a test in %s on %s." % (user, channel, self.connection.hostname))
-        if low_message == "!die":
-            print("IT WORKS I GUESS")
-            for client in pool:
-                self.disconnect(client)
-            sys.exit(0)
-        if low_message == "!github":
-            self.message(channel, "https://github.com/Atreusion/Peregrine/")
-        if message in bot_container.emote and enabled(self.connection.hostname, channel, 'emote'):
-            self.message(channel, random.choice(bot_container.emote))
-        if message == "!randomname":
-            self.message(channel, random.choice(self.user.keys()))
+        try:
+            low_message = message.lower()
+            if low_message.startswith('!test'):
+                self.message(channel, "%s, this is a test in %s on %s." % (user, channel, self.connection.hostname))
+            if low_message == "!die":
+                print("IT WORKS I GUESS")
+                for client in pool:
+                    self.disconnect(client)
+                sys.exit(0)
+            if low_message == "!github":
+                self.message(channel, "https://github.com/Atreusion/Peregrine/")
+            if message in bot_container.emote and enabled(self.connection.hostname, channel, 'emote'):
+                self.message(channel, random.choice(bot_container.emote))
+            if message == "!randomname":
+                self.message(channel, random.choice(self.user.keys()))
+        except:
+            print(traceback.format_exc())
     def on_raw(self, message):
         super().on_raw(message)
         print(message)
