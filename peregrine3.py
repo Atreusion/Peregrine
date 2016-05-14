@@ -124,7 +124,9 @@ class MyClient(pydle.Client):
             if message in bot_container.emote and enabled(self.connection.hostname, channel, 'emote'):
                 self.message(channel, random.choice(bot_container.emote))
             if message == "!randomname":
-                self.message(channel, random.choice(list(self.users.keys())))
+                userchoice = random.choice(list(self.users.keys()))
+                userchoice = self.users[userchoice]['nickname']
+                self.message(channel, userchoice)
         except SystemExit:
             pass
         except:
