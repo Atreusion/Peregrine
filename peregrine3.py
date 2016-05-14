@@ -105,8 +105,8 @@ class MyClient(pydle.Client):
 
     def on_join(self, channel, user):
         super().on_join(channel, user)
-        msg = 'Hey there, %s!' % user
-        self.message(channel, msg)
+#        msg = 'Hey there, %s!' % user
+#        self.message(channel, msg)
 
     @pydle.coroutine
     def on_message(self, channel, user, message):
@@ -116,8 +116,7 @@ class MyClient(pydle.Client):
             if low_message.startswith('!test'):
                 self.message(channel, "%s, this is a test in %s on %s." % (user, channel, self.connection.hostname))
             if low_message == "!die":
-                print("IT WORKS I GUESS")
-                for client in pool:
+                for client in pool.clients:
                     self.disconnect(client)
                 sys.exit(0)
             if low_message == "!github":
