@@ -4,10 +4,11 @@ import sys
 import bot_container
 import random
 import time
-import cPickle
+import pickle
 import os
+import threading
+import traceback
 
-# Want to combine output_limit and disabled.  Have it be:
 # {'script' : {'disabled_on' : ['servername#channel',''], 'limit' : 5.0, 'last_used' : 0.0}}
 # Have a local file, load it on startup, save whenever changed
 def enabled(server, channel, script):
@@ -17,38 +18,20 @@ def enabled(server, channel, script):
     else:
         now = time.time()
         last_time = disabled[script]['last_used']
-    
-    
-    
-    if server in disabled:
-        if channel.lower() in disabled[server]:
-            if script in disabled[server][channel.lower()]:
-                 return False
-            else:
-                 enable =  True
+        time_diff = now-last_time
+        if time_diff > disabled[script]['limit']:
+            disabled[script]['last_used'] = now
+            return True
         else:
-            enable =  True
-    else:
-        enable = True
-    if script in output_limit.keys() and enable:
-        now = time.time()
-        last_time = output_limit[script]['last_used']
-        dtime=difs(now, last_time)
-        if float(dtime) > output_limit[script]['limit']:
-            enable = True
-            output_limit[script]['last_used'] = now
-        else: enable = False
-    return enable
+            return False
 
 def load_data( filename, default={}, override=True ):
-    """
-    some_list = load_data('some_list.bot', ['default', 'list'])
-    """
+    """some_list = load_data('some_list.bot', ['default', 'list'])"""
     path = os.sep.join([os.getcwd(), 'files', filename])
     if os.path.exists(path):
-        f = open(path, 'r')
+        f = open(path, 'rb')
         try:
-            data = cPickle.load(f)
+            data = pickle.load(f)
             f.close()
             return data
         except EOFError:
@@ -56,11 +39,35 @@ def load_data( filename, default={}, override=True ):
     return default
 
 def save_data( filename, data ):
-    """
-    save_data("some_list.bot", some_list)
-    """
+    """save_data("some_list.bot", some_list)"""
     path = os.sep.join([os.getcwd(), 'files', filename])
-    with open( path, 'w' ) as f: cPickle.dump(data, f)
+    with open( path, 'wb' ) as f: pickle.dump(data, f)
+    
+class RepeatingTimer:
+    """Given to Atreus by Kindari.  I think he made it.  Example commented out below."""
+    #def test(): print 'test'
+    #timer = RepeatingTimer(5, test, repeat=10) // 5 being the seconds between each command, and 10 being the repeats.  if -1 is repeat, infinite repeat
+    #timer.start()
+    def __init__(self, delay, function, args=[], kwargs={}, repeat=-1):
+        self.delay = delay
+        self.function = function
+        self.args = args
+        self.kwargs = kwargs
+        self.repeat = repeat
+        self._timer = None
+    def start(self):
+        self._timer = threading.Timer(self.delay, self.run)
+        self._timer.start()
+    def stop(self):
+        if self._timer: self._timer.cancel()
+    def run(self):
+        try: self.function(*self.args, **self.kwargs)
+        except: print traceback.format_exc()
+        if self.repeat == -1:
+            self.start()
+        elif self.repeat > 0:
+            self.repeat -= 1
+            self.start()
 
 server_data = {
 'irc.chatspike.net' : {
@@ -114,8 +121,10 @@ class MyClient(pydle.Client):
             sys.exit(0)
         if low_message == "!github":
             self.message(channel, "https://github.com/Atreusion/Peregrine/")
-#        if message in bot_container.emote and enabled(self.connection.hostname, channel, 'emote'):
-#            self.message(channel, random.choice(bot_container.emote))
+        if message in bot_container.emote and enabled(self.connection.hostname, channel, 'emote'):
+            self.message(channel, random.choice(bot_container.emote))
+        if message == "!randomname":
+            self.message(channel, random.choice(self.user.keys()))
     def on_raw(self, message):
         super().on_raw(message)
         print(message)
@@ -131,6 +140,5 @@ try:
 except SystemExit:
     pass
 except:
-    import traceback
     print(traceback.format_exc())
     input()
