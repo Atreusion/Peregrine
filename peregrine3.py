@@ -118,14 +118,15 @@ class MyClient(pydle.Client):
             if message == "!die":
                 for client in pool.clients:
                     self.disconnect(client)
-                time.sleep(5)
                 sys.exit(0)
             if low_message == "!github":
                 self.message(channel, "https://github.com/Atreusion/Peregrine/")
             if message in bot_container.emote and enabled(self.connection.hostname, channel, 'emote'):
                 self.message(channel, random.choice(bot_container.emote))
             if message == "!randomname":
-                self.message(channel, random.choice(list(self.user.keys())))
+                self.message(channel, random.choice(list(self.users.keys())))
+        except SystemExit:
+            pass
         except:
             print(traceback.format_exc())
     def on_raw(self, message):
