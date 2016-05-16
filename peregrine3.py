@@ -11,6 +11,7 @@ import traceback
 
 # {'script' : {'disabled_on' : ['servername#channel',''], 'limit' : 5.0, 'last_used' : 0.0}}
 # Have a local file, load it on startup, save whenever changed
+# Might want to save it with last_used as 0.  Doesn't really matter, I suppose, unless I have to cross time zones...
 def enabled(server, channel, script):
     sc = server + channel
     if sc in disabled[script]['disabled_on']:
@@ -99,14 +100,11 @@ disabled = load_data('disabled.bot')
 class MyClient(pydle.Client):
     def on_connect(self):
         super().on_connect()
-        # Can't greet many people without joining a channel.
         for channel in server_data[self.connection.hostname]['channels']:
             self.join(channel)
 
     def on_join(self, channel, user):
         super().on_join(channel, user)
-#        msg = 'Hey there, %s!' % user
-#        self.message(channel, msg)
 
     @pydle.coroutine
     def on_message(self, channel, user, message):
@@ -118,17 +116,17 @@ class MyClient(pydle.Client):
             if message == "!die":
                 for client in pool.clients:
                     self.disconnect(client)
-                sys.exit(0)
+                raise SystemExit
             if low_message == "!github":
                 self.message(channel, "https://github.com/Atreusion/Peregrine/")
             if message in bot_container.emote and enabled(self.connection.hostname, channel, 'emote'):
                 self.message(channel, random.choice(bot_container.emote))
-            if message == "!randomname":
-                userchoice = random.choice(list(self.users.keys()))
-                userchoice = self.users[userchoice]['nickname']
-                self.message(channel, userchoice)
+#            if message == "!randomname":
+#                userchoice = random.choice(list(self.users.keys()))
+#                userchoice = self.users[userchoice]['nickname']
+#                self.message(channel, userchoice)
         except SystemExit:
-            pass
+            raise
         except:
             print(traceback.format_exc())
     def on_raw(self, message):
@@ -143,8 +141,8 @@ for server in server_data:
 # Handle all clients in the pool at once.
 try:
     pool.handle_forever()
-except SystemExit:
-    pass
+except SystemExit as e:
+    sys.exit(e)
 except:
     print(traceback.format_exc())
     input()
