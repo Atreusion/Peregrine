@@ -158,14 +158,14 @@ freenodepass = nickserv['freenodepass']
 server_data = {
 'irc.chatspike.net' : {
     'port' : 6667,
-    'nickname' : 'Peregrine',
+    'nickname' : 'PeregrineBot',
     'channels' : ['#uespwiki', '#bots'],
     'object' : None,
     'password' : chatspikepass
     },
 'irc.freenode.net' : {
     'port' : 6667,
-    'nickname' : 'Peregrine',
+    'nickname' : 'PeregrineBot',
     'channels' : ['#necrolounge','#dongs'],
     'object' : None,
     'password' : freenodepass
