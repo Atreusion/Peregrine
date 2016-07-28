@@ -53,7 +53,7 @@ def save_data( filename, data ):
 maiq=stuffz.maiq
 disabled = load_data('disabled.bot')
 dnd = load_data('dnd.bot', {1:"SOMETHING'S WRONG LOL"})
-nickserv = load_data('nickserv.bot')
+nickserv = load_data('nickserv.bot', {'twitchircpass':"", 'chatspikepass':"", 'subluminalpass':"", 'freenodepass':""})
 adminlist = []
 memory = {}
 niven = stuffz.niven
@@ -150,7 +150,7 @@ def shutdown():
 signal.signal( signal.SIGTERM, shutdown )
 #WHAT THE FUCK DOES THIS EVEN DO. WHY IS THIS HERE.
 
-twitchircpass = nickserv['irc.twitch.tv']
+twitchircpass = nickserv['twitchircpass']
 chatspikepass = nickserv['chatspikepass']
 subluminalpass = nickserv['subluminalpass']
 freenodepass = nickserv['freenodepass']
@@ -169,14 +169,14 @@ server_data = {
     'channels' : ['#necrolounge','#dongs'],
     'object' : None,
     'password' : freenodepass
-    },
-'irc.twitch.tv' : {
-    'port' : 6667,
-    'nickname' : 'AtryBot',
-    'channels' : ['#atreus11'],
-    'object' : None,
-    'password' : twitchircpass
     }
+#'irc.twitch.tv' : {
+#    'port' : 6667,
+#    'nickname' : 'AtryBot',
+#    'channels' : ['#atreus11'],
+#    'object' : None,
+#    'password' : twitchircpass
+#    }
 }
 
 
