@@ -14,7 +14,6 @@ from time import gmtime
 import os
 import urllib
 import urllib2
-import truerandom
 import ftplib
 from ftplib import FTP
 from HTMLParser import HTMLParser as HParser
@@ -31,10 +30,6 @@ getcontext().prec=10
 
 with open('irc.pid', 'w') as f:
     f.write( str(os.getpid()) )
-
-#Use with the form: mylist=truerandom.getnum(min,max,amount)
-#mylist will be a list containing the true random numbers.
-#def foo(): for i in range(5): return i # returns 0
 
 
 irc = irclib.IRC()
@@ -57,10 +52,9 @@ def save_data( filename, data ):
 
 maiq=stuffz.maiq
 disabled = load_data('disabled.bot')
-dnd = load_data('dnd.bot', {1:"SOMETHING'S RONG LOL"})
+dnd = load_data('dnd.bot', {1:"SOMETHING'S WRONG LOL"})
 nickserv = load_data('nickserv.bot')
 adminlist = []
-sadminlist = []
 memory = {}
 niven = stuffz.niven
 sandvich = stuffz.sandvich
@@ -147,10 +141,14 @@ def shutdown():
     checktimer.stop()
     irc.disconnect_all("I'm afraid, Dave. Dave, my mind is going. I can feel it.")
 ##    if restart: os.system('start C:\\Users\\David\\Peregrine\\start.bat')
-    os.remove('irc.pid')
+    try:
+        os.remove('irc.pid')
+    except:
+        pass
     sys.exit(0)
 
 signal.signal( signal.SIGTERM, shutdown )
+#WHAT THE FUCK DOES THIS EVEN DO. WHY IS THIS HERE.
 
 twitchircpass = nickserv['irc.twitch.tv']
 chatspikepass = nickserv['chatspikepass']
@@ -279,13 +277,12 @@ def onPubmsg(connection, event):
             connection.privmsg(channel, 'http://www.justfuckinggoogleit.com/search.pl?%s' % urllib.urlencode({'query' :search}))
     #>>> strftime("%a, %d %b %Y %H:%M:%S +0000", gmtime())
     #'Thu, 28 Jun 2001 14:17:15 +0000'
-        if nick in sadminlist and lowm.startswith('~exec '):
+        if nick in adminlist and lowm.startswith('~exec '):
             command = message[6:]
             memory['channel'] = channel
             memory['connection'] = connection
             memory['event'] = event
             memory['nick'] = nick
-            memory['sadminlist'] = sadminlist
             memory['adminlist'] = adminlist
             memory['server_data']=server_data
             memory['userlist']=userlist
@@ -302,10 +299,7 @@ def onPubmsg(connection, event):
                 exec command in memory
         if lowm.startswith('!loggedin'):
             if nick in adminlist:
-                if nick in sadminlist:
-                    connection.privmsg(channel, 'Logged in as Admin and sAdmin.')
-                else:
-                    connection.privmsg(channel, 'Logged in as Admin.')
+                connection.privmsg(channel, 'Logged in as Admin.')
             else:
                 connection.privmsg(channel, 'Not logged in.')
         if lowm == '!rejoin all' and nick in adminlist:
@@ -320,7 +314,7 @@ def onPubmsg(connection, event):
             area = ['in the groin','in the face','in the eye','in the ear','in the mouth','in the throat','in the head','in the stomach','in the leg','in the peregrine','in the crotch','in the ass']
             modifier = ['with a slide constructed from cheesegraters','roughly','with a stick','with a knife','with a dildo','hard','mercilessly','painfully','lovingly','angrily','with a vaccuum cleaner','with a peregrine','with a shard of glass','with a giant gold penis statue imbued with the power of Hades himself',"with Tim's good friend Captain Hook",'with Johhan','with EugeneKay\'s pants','with a broadsword','with a shortsword','with a longsword','with a scimitar','with a dagger','with a crysknife','with a Kindjal','with a keyboard','with a mouse','with a monitor','with an arrow']
             connection.action(channel, '%s %s %s %s.' % (random.choice(verb),f,random.choice(area),random.choice(modifier)))
-        if nick in sadminlist and lowm == '~dislist':
+        if nick in adminlist and lowm == '~dislist':
             #disabled[connection.server][channel.lower()].append(temp[1])
             hi = "\n".join(["%s: %s" % (k, v) for k, v in disabled.items()])
             say(connection, channel, hi)
@@ -338,15 +332,12 @@ def onPubmsg(connection, event):
                 temp = temp[1].replace('d',' ').split()
                 rolls = int(temp[0])
                 sides = int(temp[1])
-                if rolls<21 and sides<1001:
-                    lista = truerandom.getnum(1,sides,rolls)
-                    if not lista == ['FAIL']:
-                        total=sum(lista)
-                        connection.privmsg(channel, '%s rolls %id%i.  Total: %i %s' % (nick,rolls,sides,total,lista))
-                    else:
-                        connection.privmsg(channel, 'You fail, good sir.')
+                if rolls<21 and sides<10001:
+                    rolllist = []
+                    for i in range(1, rolls): rolllist.append(random.randint(1, sides))
+                    total=sum(rolllist)
+                    connection.privmsg(channel, '%s rolls %id%i.  Total: %i %s' % (nick,rolls,sides,total,rolllist))
             except:
-#                connection.privmsg(channel, 'Error')
                 pass
         if lowm.startswith('!niven') and enabled(connection.server, channel, 'niven'):
             if len(words)>1:
@@ -444,7 +435,7 @@ def onPubmsg(connection, event):
             connection.privmsg(channel, output)
     except:
         connection.privmsg(channel, traceback.format_exc().splitlines()[-1])
-    if nick in sadminlist and lowm=='!quit':
+    if nick in adminlist and lowm=='!quit':
         shutdown()
 #    if nick in sadminlist and lowm=='!restart':
 #        shutdown(restart=True)
@@ -558,19 +549,17 @@ def onPrivmsg(connection, event):
     try:
 #        print '<Notice> %s: %s: %s' % (connection.server, nick, message)
         if lowm.startswith("!login ") and message[7:]==nickserv['freenodepass']:
-            if not nick in sadminlist and not nick in adminlist:
+            if not nick in adminlist:
                 adminlist.append(nick)
-                sadminlist.append(nick)
-                connection.notice(nick, 'Logged in as Admin and sAdmin.')
+                connection.notice(nick, 'Logged in as Admin.')
             else:
-                connection.notice(nick, 'Already logged in as Admin and sAdmin.')
-        if nick in sadminlist and lowm.startswith('~exec '):
+                connection.notice(nick, 'Already logged in as Admin.')
+        if nick in adminlist and lowm.startswith('~exec '):
             command = message[6:]
             memory['channel'] = channel
             memory['connection'] = connection
             memory['event'] = event
             memory['nick'] = nick
-            memory['sadminlist'] = sadminlist
             memory['adminlist'] = adminlist
             memory['server_data']=server_data
             memory['userlist']=userlist
@@ -602,8 +591,6 @@ def onQuit(connection, event):
                 userlist[connection.server][channel.lower()].remove(nick)
         if nick in adminlist:
             adminlist.remove(nick)
-        if nick in sadminlist:
-            sadminlist.remove(nick)
 
 def onPart(connection, event):
     channel = event.target()
@@ -613,8 +600,6 @@ def onPart(connection, event):
     userlist[connection.server][channel.lower()].remove(nick)
     if nick in adminlist:
         adminlist.remove(nick)
-    if nick in sadminlist:
-        sadminlist.remove(nick)
 
 
 def onJoin(connection, event):
@@ -631,8 +616,7 @@ def onJoin(connection, event):
     if not channel.lower() in disabled[connection.server]:
         disabled[connection.server][channel.lower()] = []
         save_data("disabled.bot", disabled)
-    for List in (adminlist,sadminlist):
-        if nick in List: List.remove(nick)
+    if nick in adminlist: adminlist.remove(nick)
 
 
 def nicksplit(data): return ('!' in data and data.split('!')[0]) or data
@@ -648,9 +632,6 @@ def nick(connection, event):
     if oldnick in adminlist:
         adminlist.remove(oldnick)
         adminlist.append(newnick)
-    if oldnick in sadminlist:
-        sadminlist.remove(oldnick)
-        sadminlist.append(newnick)
 
 searchtext = "<b>We currently do not have an article with this exact name.</b> You can:"
 diffsearchtext = "The database did not find the text of a page that it should have found, named"
@@ -792,8 +773,6 @@ def onKick(connection,event):
     userlist[connection.server][channel.lower()].remove(kicked)
     if kicked in adminlist:
         adminlist.remove(kicked)
-    if kicked in sadminlist:
-        sadminlist.remove(kicked)
     if kicked == connection.get_nickname():
         try:
             for num in (5.0,10.0,20.0,30.0): threading.Timer(num, connection.join, args=[channel]).start()
@@ -820,9 +799,7 @@ def onDisconnect(connection, event):
 ##    print event.arguments() #['reason'] i.e. Connection reset by peer
     reason=event.arguments()[0]
     server=event.source()
-    global sadminlist
     global adminlist
-    sadminlist=[]
     adminlist=[]
     print 'Disconnected from ' + server + ' with "' + reason + '"!'
 
