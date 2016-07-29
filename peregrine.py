@@ -197,7 +197,7 @@ def onPubmsg(connection, event):
             connection.privmsg(channel, 'http://en.wikipedia.org/wiki/%s' % args)
         if lowm.startswith('objection') and enabled(connection.server, channel, 'objection') and "#"==channel[0]:
             timer1 = threading.Timer(1.0, connection.action, args=[channel, 'slams his fist'])
-            timer2 = threading.Timer(2.0, connection.action, args=[channel, 'points at %s' % (random.choice(userlist[connection.server][channel.lower()]))])
+            timer2 = threading.Timer(2.0, connection.actioen, args=[channel, 'points at %s' % (random.choice(userlist[connection.server][channel.lower()]))])
             timer3 = threading.Timer(3.0, connection.privmsg, args=[channel, 'ERECTION!'])
             timer1.start()
             timer2.start()
@@ -236,30 +236,29 @@ def onPubmsg(connection, event):
             else: m='%s minutes, ' % str(minutes)
             connection.privmsg(channel, 'I was born on Sunday, April 19th, 2009, at 14:07:10.  That was %s%s%s%s seconds ago.' % (d,h,m,seconds))
         if lowm.startswith('~toggle ') and nick in adminlist:
-            if len(words) == 2:
-                script = lwords[2]
-                server_channel = connection.server + channel
-                if script in disabled:
-                    if server_channel in disabled[script][disabled_on]:
-                        disabled[script][disabled_on].remove(server_channel)
-                        if len(disabled[script][disabled_on]) == 0: del disabled[script]
-                    else: disabled[script][disabled_on].append(server_channel)
-                else:
-                    disabled[script] = {'disabled_on':[server_channel], 'limit':5.0, 'last_used':0.0}
+            script = lowm[8:]
+            server_channel = connection.server + channel
+            if script in disabled:
+                if server_channel in disabled[script][disabled_on]:
+                    disabled[script][disabled_on].remove(server_channel)
+                    if len(disabled[script][disabled_on]) == 0: del disabled[script]
+                else: disabled[script][disabled_on].append(server_channel)
+            else:
+                disabled[script] = {'disabled_on':[server_channel], 'limit':5.0, 'last_used':0.0}
                 # {'script' : {'disabled_on' : ['servername#channel',''], 'limit' : 5.0, 'last_used' : 0.0}}
                 save_data("disabled.bot", disabled)
-        if lowm.startswith('~toggled '):
-            if lowm.startswith('~toggled #'):
-                temp = lowm.split(' ', 1)
-                chand = disabled[connection.server][temp[1]]
-                d = ', '.join(chand)
-                connection.privmsg(channel, 'Scripts disabled in %s: %s' % (temp[1], d))
-            else:
-                if len(words) == 2:
-                    if words[1] in disabled[connection.server][channel.lower()]:
-                        connection.privmsg(channel, '%s is disabled in %s.' % (words[1], channel))
-                    else:
-                        connection.privmsg(channel, '%s is enabled in %s.' % (words[1], channel))
+        if lowm.startswith('!toggled '):
+            query = lowm[9:]
+            if lowm.startswith('!toggled #'):
+                server_channel = connection.server + query
+                disabledlist = ""
+                for script in disabled:
+                    if server_channel in disabled[script]['disabled_on']: disabledlist = disabledlist + script + " "
+                connection.privmsg(channel, 'Scripts disabled in %s: %s' % (query, disabledlist))
+            elif query in disabled:
+                server_channel = connection.server + channel
+                if server_channel in disabled[query]['disabled_on']: connection.privmsg(channel, "%s is disabled on this channel." % query)
+                else: connection.privmsg(channel, "%s is enabled on this channel." % query)
         if (lowm.startswith('!stfw ') or lowm.startswith('!jfgi ')) and enabled(connection.server, channel, 'jfgi'):
             words = message.split(' ', 1)
             search = words[1]
