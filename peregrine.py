@@ -197,7 +197,7 @@ def onPubmsg(connection, event):
             connection.privmsg(channel, 'http://en.wikipedia.org/wiki/%s' % args)
         if lowm.startswith('objection') and enabled(connection.server, channel, 'objection') and "#"==channel[0]:
             timer1 = threading.Timer(1.0, connection.action, args=[channel, 'slams his fist'])
-            timer2 = threading.Timer(2.0, connection.actioen, args=[channel, 'points at %s' % (random.choice(userlist[connection.server][channel.lower()]))])
+            timer2 = threading.Timer(2.0, connection.action, args=[channel, 'points at %s' % (random.choice(userlist[connection.server][channel.lower()]))])
             timer3 = threading.Timer(3.0, connection.privmsg, args=[channel, 'ERECTION!'])
             timer1.start()
             timer2.start()
