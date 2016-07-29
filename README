@@ -1,5 +1,8 @@
 I guess an introduction is in order.
 
-Hi, I'm Atreus, and this is my horribly written bot.
+Hi, I'm Atreusion, and this is my horribly written bot.
 
-The bulk of the bot's logic is held in peregrine.py.  Files are in the Files folder.  irclib is the IRC library.  bot_container holds a bunch of boring stuff I didn't want cluttering the bot code up.
+The bulk of the bot's logic is held in peregrine.py.
+Files are in the files folder.
+irclib is the IRC library.
+bot_container holds a bunch of boring stuff I didn't want cluttering the bot code up.
