@@ -16,22 +16,13 @@ from time import gmtime
 import os
 import urllib
 import urllib2
-import ftplib
-from ftplib import FTP
-from HTMLParser import HTMLParser as HParser
 import bot_container
 import decimal
 from decimal import *
 from datetime import datetime
 from datetime import timedelta
 import signal
-hparser = HParser()
 getcontext().prec=10
-
-
-with open('irc.pid', 'w') as f:
-    f.write( str(os.getpid()) )
-
 
 irc = irclib.IRC()
 
@@ -127,10 +118,6 @@ def shutdown():
     checktimer.stop()
     irc.disconnect_all("I'm afraid, Dave. Dave, my mind is going. I can feel it.")
 ##    if restart: os.system('start C:\\Users\\David\\Peregrine\\start.bat')
-    try:
-        os.remove('irc.pid')
-    except:
-        pass
     sys.exit(0)
 
 signal.signal( signal.SIGTERM, shutdown )
@@ -612,9 +599,10 @@ def nick(connection, event):
         adminlist.remove(oldnick)
         adminlist.append(newnick)
 
-searchtext = "<b>We currently do not have an article with this exact name.</b> You can:"
-diffsearchtext = "The database did not find the text of a page that it should have found, named"
+
 def UESP(connection, event):
+    searchtext = "<b>We currently do not have an article with this exact name.</b> You can:"
+    diffsearchtext = "The database did not find the text of a page that it should have found, named"
     message = event.arguments()[0]
     channel = event.target()
     nick = nicksplit(event.source())
