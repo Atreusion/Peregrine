@@ -1,5 +1,7 @@
 #14:07:10 -- Sun Apr 19 2009 -- ## time.localtime(1240164430) time.gmtime(1240150030)
 
+from passlib.apps import custom_app_context as pwd_context
+import subprocess
 import sys
 import irclib
 import threading
@@ -17,12 +19,11 @@ import urllib2
 import ftplib
 from ftplib import FTP
 from HTMLParser import HTMLParser as HParser
-import stuffz
+import bot_container
 import decimal
 from decimal import *
 from datetime import datetime
 from datetime import timedelta
-import socket
 import signal
 hparser = HParser()
 getcontext().prec=10
@@ -50,43 +51,28 @@ def save_data( filename, data ):
     path = os.sep.join([os.getcwd(), 'files', filename])
     with open( path, 'w' ) as f: cPickle.dump(data, f)
 
-maiq=stuffz.maiq
-disabled = load_data('disabled.bot')
-dnd = load_data('dnd.bot', {1:"SOMETHING'S WRONG LOL"})
-nickserv = load_data('nickserv.bot', {'twitchircpass':"", 'chatspikepass':"", 'subluminalpass':"", 'freenodepass':""})
-adminlist = []
-memory = {}
-niven = stuffz.niven
-sandvich = stuffz.sandvich
-userlist={}
-vendlist=stuffz.vendlist
-output_limit={
-'dnd':{'limit':5.0,'last_used':0.0},
-'vend':{'limit':5.0,'last_used':0.0},
-'blend':{'limit':5.0,'last_used':0.0},
-'niven':{'limit':5.0,'last_used':0.0},
-'abuse':{'limit':5.0,'last_used':0.0},
-'blame':{'limit':5.0,'last_used':0.0},
-'treat':{'limit':5.0,'last_used':0.0},
-'emote':{'limit':5.0,'last_used':0.0}
+temp_disabled={
+'dnd':{'disabled_on' : [], 'limit':5.0, 'last_used':0.0},
+'vend':{'disabled_on' : [], 'limit':5.0, 'last_used':0.0},
+'blend':{'disabled_on' : [], 'limit':5.0, 'last_used':0.0},
+'niven':{'disabled_on' : [], 'limit':5.0, 'last_used':0.0},
+'abuse':{'disabled_on' : [], 'limit':5.0, 'last_used':0.0},
+'blame':{'disabled_on' : [], 'limit':5.0, 'last_used':0.0},
+'treat':{'disabled_on' : [], 'limit':5.0, 'last_used':0.0},
+'emote':{'disabled_on' : [], 'limit':5.0, 'last_used':0.0}
 }
 
-emote = [""":-)""", """:)""", """:D""", """:o)""", """:]""", """:3""", """:c)""",
-""":>""", """=]""", """8)""", """=)""", """:}""", """:^)""", """:-D""", """8-D""",
-"""8D""", """x-D""", """xD""", """X-D""", """XD""", """=-D""", """=D""", """=-3""",
-"""=3""", """B^D""", """:-))""", """>:[""", """:-(""", """:(""", """""", """:-c""",
-""":c""", """:-<""", """""", """:<""", """:-[""", """:[""", """:{""", """;(""",
-""">:(""", """:@""", """:'-(""", """:'(""", """:'-)""", """:')""", """D:<""",
-"""D:""", """D8""", """D;""", """D=""", """DX""", """v.v""", """D-':""", """>:O""",
-""":-O""", """:O""", """:-o""", """:o""", """8-0""", """O_O""", """o-o""", """O_o""",
-"""o_O""", """o_o""", """O-O""", """0.0""", """o.o""", """O.O""", """o.O""",
-"""O.o""", """0_0""", """:*""", """:^*""", """>:P""", """:-P""", """:P""", """X-P""",
-"""x-p""", """xp""", """XP""", """:-p""", """:p""", """=p""", """>;)""", """>:-)""",
-""":-b""", """:b""", """d:""", """>:\\""", """>:/""", """:-/""", """:d"""
-""":-.""", """:/""", """:\\""", """=/""", """=\\""", """:L""", """=L""", """:S""",
-""">.<""", """:|""", """:-|""", """:$""", """:-X""", """:X""", """:-#""", """:#""",
-"""O:-)""", """0:-3""", """0:3""", """0:-)""", """0:)""", """0;^)""", """>:)""",
-""">.>""", """<.<""", """:V"""]
+maiq=bot_container.maiq
+disabled = load_data('disabled.bot', temp_disabled)
+dnd = load_data('dnd.bot', {1:"SOMETHING'S WRONG LOL"})
+nickserv = load_data('nickserv.bot', {'twitchircpass':"", 'chatspikepass':"", 'freenodepass':""})
+adminlist = []
+memory = {}
+niven = bot_container.niven
+sandvich = bot_container.sandvich
+userlist={}
+vendlist=bot_container.vendlist
+emote = bot_container.emote
 
 sdw = re.compile("<a href=\"http://en\.wikipedia\.org/wiki/.*\">(.*)</a>")
 uespregex = re.compile("<a href=\"/wiki/(.*)\" title=")
@@ -152,7 +138,6 @@ signal.signal( signal.SIGTERM, shutdown )
 
 twitchircpass = nickserv['twitchircpass']
 chatspikepass = nickserv['chatspikepass']
-subluminalpass = nickserv['subluminalpass']
 freenodepass = nickserv['freenodepass']
 
 server_data = {
@@ -200,7 +185,7 @@ def onPubmsg(connection, event):
     if channel==connection.get_nickname(): channel=nick # Basic query support, don't blame me if it goes wrong
     try:
         if lowm == "!version":
-            connection.privmsg(channel, 'I am version .83466g :( (You act like this bot will ever be worthy of a version 1)')
+            connection.privmsg(channel, 'I am version .834662g :( (You act like this bot will ever be worthy of a version 1)')
         if lowm == "!github":
             connection.privmsg(channel, 'https://github.com/Atreus11/Peregrine')
         if message in emote and enabled(connection.server, channel, 'emote'):
@@ -217,7 +202,7 @@ def onPubmsg(connection, event):
             timer1.start()
             timer2.start()
             timer3.start()
-        if lowm in ['!cmds', '!help', '!haskillhelp']:
+        if lowm in ['!cmds', '!help']:
             connection.privmsg(channel, 'Visit http://www.uesp.net/wiki/User:Peregrine for a full list of commands and functions.  http://atreus.necrolounge.org/uesp.html for UESPWiki commands.')
         if lowm.startswith('!go ') or lowm.startswith('!google '):
             words = message.split(' ', 1)
@@ -252,12 +237,16 @@ def onPubmsg(connection, event):
             connection.privmsg(channel, 'I was born on Sunday, April 19th, 2009, at 14:07:10.  That was %s%s%s%s seconds ago.' % (d,h,m,seconds))
         if lowm.startswith('~toggle ') and nick in adminlist:
             if len(words) == 2:
-                if words[1] in disabled[connection.server][channel.lower()]:
-                    disabled[connection.server][channel.lower()].remove(words[1])
-                    connection.privmsg(channel, "%s is enabled." % words[1])
+                script = lwords[2]
+                server_channel = connection.server + channel
+                if script in disabled:
+                    if server_channel in disabled[script][disabled_on]:
+                        disabled[script][disabled_on].remove(server_channel)
+                        if len(disabled[script][disabled_on]) == 0: del disabled[script]
+                    else: disabled[script][disabled_on].append(server_channel)
                 else:
-                    disabled[connection.server][channel.lower()].append(words[1])
-                    connection.privmsg(channel, "%s is disabled." % words[1])
+                    disabled[script] = {'disabled_on':[server_channel], 'limit':5.0, 'last_used':0.0}
+                # {'script' : {'disabled_on' : ['servername#channel',''], 'limit' : 5.0, 'last_used' : 0.0}}
                 save_data("disabled.bot", disabled)
         if lowm.startswith('~toggled '):
             if lowm.startswith('~toggled #'):
@@ -314,18 +303,6 @@ def onPubmsg(connection, event):
             area = ['in the groin','in the face','in the eye','in the ear','in the mouth','in the throat','in the head','in the stomach','in the leg','in the peregrine','in the crotch','in the ass']
             modifier = ['with a slide constructed from cheesegraters','roughly','with a stick','with a knife','with a dildo','hard','mercilessly','painfully','lovingly','angrily','with a vaccuum cleaner','with a peregrine','with a shard of glass','with a giant gold penis statue imbued with the power of Hades himself',"with Tim's good friend Captain Hook",'with Johhan','with EugeneKay\'s pants','with a broadsword','with a shortsword','with a longsword','with a scimitar','with a dagger','with a crysknife','with a Kindjal','with a keyboard','with a mouse','with a monitor','with an arrow']
             connection.action(channel, '%s %s %s %s.' % (random.choice(verb),f,random.choice(area),random.choice(modifier)))
-        if nick in adminlist and lowm == '~dislist':
-            #disabled[connection.server][channel.lower()].append(temp[1])
-            hi = "\n".join(["%s: %s" % (k, v) for k, v in disabled.items()])
-            say(connection, channel, hi)
-        if nick in adminlist and lowm == '~sdislist':
-            hi = ", ".join(["%s = %s" % (k, v) for k, v in disabled[connection.server].items()])
-            say(connection, channel, hi)
-        if nick in adminlist and lowm.startswith('~disdel '):
-            if connection.server in disabled:
-                if words[1] in disabled[connection.server]:
-                    del disabled[connection.server][words[1]]
-                    connection.privmsg(channel, '%s deleted from %s.' % (words[1], connection.server))
         if lowm.startswith('!dice ') or lowm.startswith('!roll '):
             try:
                 temp = message.split(' ',1)
@@ -334,7 +311,7 @@ def onPubmsg(connection, event):
                 sides = int(temp[1])
                 if rolls<21 and sides<10001:
                     rolllist = []
-                    for i in range(1, rolls): rolllist.append(random.randint(1, sides))
+                    for i in range(1, rolls+1): rolllist.append(random.randint(1, sides))
                     total=sum(rolllist)
                     connection.privmsg(channel, '%s rolls %id%i.  Total: %i %s' % (nick,rolls,sides,total,rolllist))
             except:
@@ -429,7 +406,7 @@ def onPubmsg(connection, event):
         if lowm=='!maiq' or lowm=="!m'aiq":
             choice = random.choice(maiq)
             connection.privmsg(channel, choice)
-        if lowm.startswith('!dongout') and channel.lower()=='#necrolounge':
+        if lowm.startswith('!dongout') and channel.lower()=='#dongs':
             output = ', '.join(userlist[connection.server][channel.lower()])
             output = output + '! It\'s time for a DONGOUT!'
             connection.privmsg(channel, output)
@@ -548,11 +525,13 @@ def onPrivmsg(connection, event):
         print traceback.format_exc()
     try:
 #        print '<Notice> %s: %s: %s' % (connection.server, nick, message)
-        if lowm.startswith("!login ") and message[7:]==nickserv['freenodepass']:
-            if not nick in adminlist:
+        if lowm.startswith("!login ") and len(lwords)==2:
+            hash = load_data("password.hash")
+            ok = pwd_context.verify(lwords[1], hash)
+            if ok and not nick in adminlist:
                 adminlist.append(nick)
                 connection.notice(nick, 'Logged in as Admin.')
-            else:
+            elif ok and nick in adminlist:
                 connection.notice(nick, 'Already logged in as Admin.')
         if nick in adminlist and lowm.startswith('~exec '):
             command = message[6:]
@@ -640,10 +619,10 @@ def UESP(connection, event):
     channel = event.target()
     nick = nicksplit(event.source())
     try:
-        scmds = stuffz.scmds
-        acmds = stuffz.acmds
-        ccmds = stuffz.ccmds
-        asearch = stuffz.asearch
+        scmds = bot_container.scmds
+        acmds = bot_container.acmds
+        ccmds = bot_container.ccmds
+        asearch = bot_container.asearch
         cmd, args = (message.split(' ', 1) + ['',''])[:2]
         if len(cmd) > 2:
             if cmd.lower()[1] == 't': cmd_talk = cmd[0] + cmd[2:]
@@ -745,25 +724,18 @@ def uespregextest(url2,url,connection,channel):
 
 
 def enabled(server, channel, script):
-    if server in disabled:
-        if channel.lower() in disabled[server]:
-            if script in disabled[server][channel.lower()]:
-                 return False
-            else:
-                 enable =  True
-        else:
-            enable =  True
+    sc = server + channel
+    if sc in disabled[script]['disabled_on']:
+        return False
     else:
-        enable = True
-    if script in output_limit.keys() and enable:
         now = time.time()
-        last_time = output_limit[script]['last_used']
-        dtime=difs(now, last_time)
-        if float(dtime) > output_limit[script]['limit']:
-            enable = True
-            output_limit[script]['last_used'] = now
-        else: enable = False
-    return enable
+        last_time = disabled[script]['last_used']
+        time_diff = now-last_time
+        if time_diff > disabled[script]['limit']:
+            disabled[script]['last_used'] = now
+            return True
+        else:
+            return False
 
 def onKick(connection,event):
     kicker = nicksplit(event.source())
