@@ -525,9 +525,10 @@ def onPrivmsg(connection, event):
         print traceback.format_exc()
     try:
 #        print '<Notice> %s: %s: %s' % (connection.server, nick, message)
-        if lowm.startswith("!login ") and len(lwords)==2:
+        if lowm.startswith("!login ") and len(message)>7:
             hash = load_data("password.hash")
-            ok = pwd_context.verify(lwords[1], hash)
+            ok = pwd_context.verify(message[7:], hash)
+            del hash
             if ok and not nick in adminlist:
                 adminlist.append(nick)
                 connection.notice(nick, 'Logged in as Admin.')
