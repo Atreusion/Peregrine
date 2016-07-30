@@ -123,8 +123,8 @@ def httpget(url,data=None):
 def enabled(server, channel, script):
     """Checks to see if script is disabled on server's channel."""
     sc = server + channel
-    if sc in disabled[script]['disabled_on']:
-        return False
+    if script not in disabled: return False
+    elif sc in disabled[script]['disabled_on']: return False
     else:
         now = time.time()
         last_time = disabled[script]['last_used']
@@ -151,7 +151,8 @@ temp_disabled={
 'abuse':{'disabled_on' : [], 'limit':5.0, 'last_used':0.0},
 'blame':{'disabled_on' : [], 'limit':5.0, 'last_used':0.0},
 'treat':{'disabled_on' : [], 'limit':5.0, 'last_used':0.0},
-'emote':{'disabled_on' : [], 'limit':5.0, 'last_used':0.0}
+'emote':{'disabled_on' : [], 'limit':5.0, 'last_used':0.0},
+'objection':{'disabled_on' : [], 'limit':5.0, 'last_used':0.0}
 }
 disabled = load_data('disabled.bot', temp_disabled)
 dnd = load_data('dnd.bot', {1:"SOMETHING'S WRONG LOL"})
@@ -253,14 +254,12 @@ def onPubmsg(connection, event):
                     connection.privmsg(channel, "%s was enabled on %s." % (script, channel))
                     save_data("disabled.bot", disabled)
                 else:
-                    print('1')
                     disabled[script]['disabled_on'].append(server_channel)
-                    print('1')
                     connection.privmsg(channel, "%s was disabled on %s." % (script, channel))
-                    print('1')
                     save_data("disabled.bot", disabled)
             else:
                 disabled[script] = {'disabled_on':[server_channel], 'limit':5.0, 'last_used':0.0}
+                connection.privmsg(channel, "%s was disabled on %s." % (script, channel))
                 # {'script' : {'disabled_on' : ['servername#channel',''], 'limit' : 5.0, 'last_used' : 0.0}}
                 save_data("disabled.bot", disabled)
         if lowm.startswith('!toggled '):
