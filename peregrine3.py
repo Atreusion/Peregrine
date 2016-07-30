@@ -423,6 +423,10 @@ def onPubmsg(connection, event):
         connection.privmsg(channel, traceback.format_exc().splitlines()[-1])
     if nick in adminlist and lowm=='!quit':
         shutdown()
+        
+def nick_strip(s):
+    if s[0] in '!+%@&~:': return s[1:]
+    return s
 		
 def names(connection, event):
     channel = event.arguments[1].lower()
@@ -504,14 +508,6 @@ def onPrivmsg(connection, event):
     except:
         connection.privmsg(nick, traceback.format_exc().splitlines()[-1])
 		
-def names(connection, event):
-    channel = event.arguments[1].lower()
-    nicks = event.arguments[2].split()
-    nicks = [nick_strip(nick) for nick in nicks]
-    if not connection.server in userlist: userlist[connection.server] = {}
-    if not channel in userlist[connection.server]: userlist[connection.server][channel] = []
-    userlist[connection.server][channel].extend(nicks)
-    remove_dups(userlist[connection.server][channel])
 
 def onQuit(connection, event):
     reason=''.join(event.arguments)
