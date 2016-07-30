@@ -162,17 +162,17 @@ server_data = {
 'irc.chatspike.net' : {
     'port' : 6667,
     'nickname' : 'PeregrineBot',
-    'channels' : ['#bots'],#['#uespwiki', '#bots', '#pandemonium'],
+    'channels' : ['#uespwiki', '#bots', '#pandemonium'],
     'object' : None,
     'password' : chatspikepass
+    },
+'irc.freenode.net' : {
+    'port' : 6667,
+    'nickname' : 'PeregrineBot',
+    'channels' : ['#necrolounge','#dongs'],
+    'object' : None,
+    'password' : freenodepass
     }
-#'irc.freenode.net' : {
-#    'port' : 6667,
-#    'nickname' : 'PeregrineBot',
-#    'channels' : ['#necrolounge','#dongs'],
-#    'object' : None,
-#    'password' : freenodepass
-#    }
 }
 			
 def onWelcome(connection, event):
@@ -194,7 +194,7 @@ def onPubmsg(connection, event):
     if channel==connection.get_nickname(): channel=nick # Basic query support, don't blame me if it goes wrong
     try:
         if lowm == "!version":
-            connection.privmsg(channel, 'I am version .834662g :( (You act like this bot will ever be worthy of a version 1)')
+            connection.privmsg(channel, 'I am version 3.0 :(')
         if lowm.startswith("~status ") and len(message)>8 and nick in adminlist:
             service = message[8:]
             try:
@@ -208,7 +208,7 @@ def onPubmsg(connection, event):
             except:
                 pass
         if lowm == "!github":
-            connection.privmsg(channel, 'https://github.com/Atreus11/Peregrine')
+            connection.privmsg(channel, 'https://github.com/Atreusion/Peregrine')
         if message in emote and enabled(connection.server, channel, 'emote'):
             connection.privmsg(channel, random.choice(emote))
         if lowm.startswith("!wp "):
