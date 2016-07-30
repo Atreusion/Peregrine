@@ -264,7 +264,7 @@ def onPubmsg(connection, event):
                 server_channel = connection.server + query
                 disabledlist = ""
                 for script in disabled:
-                print(script + " run")
+                    print(script + " run")
                     if server_channel in disabled[script]['disabled_on']: disabledlist = disabledlist + script + " "
                 connection.privmsg(channel, 'Scripts disabled in %s: %s' % (query, disabledlist))
                 print('3')
