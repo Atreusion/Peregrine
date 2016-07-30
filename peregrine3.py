@@ -536,13 +536,6 @@ def onJoin(connection, event):
     lown = nick.lower()
     if not channel.lower() in userlist[connection.server]: userlist[connection.server][channel.lower()]=[]
     if not nick in userlist[connection.server][channel.lower()]: userlist[connection.server][channel.lower()].append(nick)
-#disabled[connection.server][channel].append(temp[1])
-    if not connection.server in disabled:
-        disabled[connection.server] = {}
-        save_data("disabled.bot", disabled)
-    if not channel.lower() in disabled[connection.server]:
-        disabled[connection.server][channel.lower()] = []
-        save_data("disabled.bot", disabled)
     if nick in adminlist: adminlist.remove(nick)
 	
 def nick(connection, event):
