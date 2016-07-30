@@ -583,7 +583,7 @@ def ping(server_object, server):
         port = server_data[server]['port']
         nickname = server_data[server]['nickname']
         server_password = server_data[server]['password']
-        server_object = irc.server()
+        server_object = irc_object.server()
         try:
             try:
                 #3 try statements makes me feel dirty and kinky
@@ -631,7 +631,7 @@ for server in server_data:
 try:
     irc_object.process_forever()
 except SystemExit:
-    pass
+    sys.exit(0)
 except:
     import traceback
     print(traceback.format_exc())
