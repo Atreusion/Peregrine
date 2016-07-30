@@ -187,7 +187,6 @@ def onWelcome(connection, event):
     connection.mode(connection.get_nickname(), '+B')
 
 def onPubmsg(connection, event):
-    print("pubmsg " + ''.join(event.arguments))
     message = event.arguments[0]
     channel = event.target
     lowm = message.lower()
@@ -249,10 +248,10 @@ def onPubmsg(connection, event):
             script = lowm[8:]
             server_channel = connection.server + channel
             if script in disabled:
-                if server_channel in disabled[script][disabled_on]:
-                    disabled[script][disabled_on].remove(server_channel)
-                    if len(disabled[script][disabled_on]) == 0: del disabled[script]
-                else: disabled[script][disabled_on].append(server_channel)
+                if server_channel in disabled[script]['disabled_on']:
+                    disabled[script]['disabled_on'].remove(server_channel)
+                    if len(disabled[script]['disabled_on']) == 0: del disabled[script]
+                else: disabled[script]['disabled_on'].append(server_channel)
             else:
                 disabled[script] = {'disabled_on':[server_channel], 'limit':5.0, 'last_used':0.0}
                 # {'script' : {'disabled_on' : ['servername#channel',''], 'limit' : 5.0, 'last_used' : 0.0}}
@@ -284,6 +283,7 @@ def onPubmsg(connection, event):
             memory['server_data']=server_data
             memory['adminlist'] = adminlist
             memory['disabled'] = disabled
+            memory['userlist']=userlist
             if command.startswith('say '):
                 stuff=command[4:]
                 command='connection.privmsg(channel, %s)' % stuff
@@ -462,7 +462,6 @@ def raw(connection, event):
         print(connection.server + ' ' + timenow + ' ' + 'ERROR'.join(event.arguments))
 
 def onPrivmsg(connection, event):
-    print("privmsg " + ''.join(event.arguments))
     message = event.arguments[0]
     channel = event.target
     lowm = message.lower()
@@ -473,7 +472,6 @@ def onPrivmsg(connection, event):
         connection.notice(nick,'something went wrong, onprivmsg')
         print(traceback.format_exc())
     try:
-#        print '<Notice> %s: %s: %s' % (connection.server, nick, message)
         if lowm.startswith("!login ") and len(message)>7:
             hash = load_data("password.hash")
             ok = pwd_context.verify(message[7:], hash)
@@ -597,7 +595,8 @@ def ping(server_object, server):
             print('Unable to connect to %s (ping)' % server)
             import traceback
             print(traceback.format_exc())
-    irc.execute_delayed(300, ping, (server_object, server))
+#    irc.execute_delayed(300, ping, (server_object, server))
+#Do I need this line?
 	
 irc_object.add_global_handler('welcome', onWelcome)
 irc_object.add_global_handler('pubmsg', onPubmsg)
