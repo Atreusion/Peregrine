@@ -187,7 +187,7 @@ def onWelcome(connection, event):
     connection.mode(connection.get_nickname(), '+B')
 
 def onPubmsg(connection, event):
-    print("pubmsg " + event.arguments)
+    print("pubmsg " + ''.join(event.arguments))
     message = event.arguments[0]
     channel = event.target
     lowm = message.lower()
@@ -457,7 +457,7 @@ def raw(connection, event):
         print(connection.server + ' ' + timenow + ' ' + 'ERROR'.join(event.arguments))
 
 def onPrivmsg(connection, event):
-    print("privmsg " + event.arguments)
+    print("privmsg " + ''join(event.arguments))
     message = event.arguments[0]
     channel = event.target
     lowm = message.lower()
