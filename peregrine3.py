@@ -283,6 +283,7 @@ def onPubmsg(connection, event):
             memory['nick'] = nick
             memory['server_data']=server_data
             memory['adminlist'] = adminlist
+            memory['disabled'] = disabled
             if command.startswith('say '):
                 stuff=command[4:]
                 command='connection.privmsg(channel, %s)' % stuff
@@ -457,7 +458,7 @@ def raw(connection, event):
         print(connection.server + ' ' + timenow + ' ' + 'ERROR'.join(event.arguments))
 
 def onPrivmsg(connection, event):
-    print("privmsg " + ''join(event.arguments))
+    print("privmsg " + ''.join(event.arguments))
     message = event.arguments[0]
     channel = event.target
     lowm = message.lower()
@@ -487,6 +488,7 @@ def onPrivmsg(connection, event):
             memory['adminlist'] = adminlist
             memory['server_data']=server_data
             memory['userlist']=userlist
+            memory['disabled'] = disabled
             if command.startswith('say '):
                 stuff=command[4:]
                 command='connection.privmsg(nick, %s)' % stuff
