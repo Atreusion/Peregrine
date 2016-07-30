@@ -251,25 +251,25 @@ def onPubmsg(connection, event):
                 if server_channel in disabled[script]['disabled_on']:
                     disabled[script]['disabled_on'].remove(server_channel)
                     if len(disabled[script]['disabled_on']) == 0: del disabled[script]
-                else: disabled[script]['disabled_on'].append(server_channel)
+                    connection.privmsg(channel, "%s was enabled on %s." % (script, channel))
+                    save_data("disabled.bot", disabled)
+                else:
+                    disabled[script]['disabled_on'].append(server_channel)
+                    connection.privmsg(channel, "%s was disabled on %s." % (script, channel))
+                    save_data("disabled.bot", disabled)
             else:
                 disabled[script] = {'disabled_on':[server_channel], 'limit':5.0, 'last_used':0.0}
                 # {'script' : {'disabled_on' : ['servername#channel',''], 'limit' : 5.0, 'last_used' : 0.0}}
                 save_data("disabled.bot", disabled)
         if lowm.startswith('!toggled '):
-            print('1')
             query = lowm[9:]
             if lowm.startswith('!toggled #'):
-                print('2')
                 server_channel = connection.server + query
                 disabledlist = ""
                 for script in disabled:
-                    print(script + " run")
                     if server_channel in disabled[script]['disabled_on']: disabledlist = disabledlist + script + " "
-                connection.privmsg(channel, 'Scripts disabled in %s: %s' % (query, disabledlist))
-                print('3')
+                if not disabledlist == '': connection.privmsg(channel, 'Scripts disabled in %s: %s' % (query, disabledlist))
             elif query in disabled:
-                print('4')
                 server_channel = connection.server + channel
                 if server_channel in disabled[query]['disabled_on']: connection.privmsg(channel, "%s is disabled on this channel." % query)
                 else: connection.privmsg(channel, "%s is enabled on this channel." % query)
