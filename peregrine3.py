@@ -123,7 +123,7 @@ def httpget(url,data=None):
 def enabled(server, channel, script):
     """Checks to see if script is disabled on server's channel."""
     sc = server + channel
-    if script not in disabled: return False
+    if script not in disabled: return True
     elif sc in disabled[script]['disabled_on']: return False
     else:
         now = time.time()
