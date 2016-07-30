@@ -4,7 +4,6 @@ import irc.client
 from passlib.apps import custom_app_context as pwd_context
 import subprocess
 import sys
-import irclib
 import threading
 import traceback
 import random
