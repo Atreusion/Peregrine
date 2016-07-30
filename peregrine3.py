@@ -25,9 +25,6 @@ getcontext().prec=10
 irc_object = irc.client.Reactor()
 
 maiq=bot_container.maiq
-twitchircpass = nickserv['twitchircpass']
-chatspikepass = nickserv['chatspikepass']
-freenodepass = nickserv['freenodepass']
 adminlist = []
 memory = {}
 niven = bot_container.niven
@@ -176,6 +173,9 @@ def enabled(server, channel, script):
 disabled = load_data('disabled.bot', temp_disabled)
 dnd = load_data('dnd.bot', {1:"SOMETHING'S WRONG LOL"})
 nickserv = load_data('nickserv.bot', {'twitchircpass':"", 'chatspikepass':"", 'freenodepass':""})
+twitchircpass = nickserv['twitchircpass']
+chatspikepass = nickserv['chatspikepass']
+freenodepass = nickserv['freenodepass']
 			
 def onWelcome(connection, event):
     for channel in server_data[connection.server]['channels']:
