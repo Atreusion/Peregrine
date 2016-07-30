@@ -332,13 +332,13 @@ def onPubmsg(connection, event):
                 pass
         if lowm.startswith('!niven') and enabled(connection.server, channel, 'niven'):
             if len(words)>1:
-                if lwords[1] in niven.keys():
+                if lwords[1] in list(niven):
                     connection.privmsg(channel, '%s: %s' % (lwords[1], niven[lwords[1]]))
                 else:
-                    n = random.choice(niven.keys())
+                    n = random.choice(list(niven))
                     connection.privmsg(channel, '%s: %s' % (n, niven[n]))
             else:
-                n = random.choice(niven.keys())
+                n = random.choice(list(niven))
                 connection.privmsg(channel, '%s: %s' % (n, niven[n]))
         if lowm=='!sandvich':
             stuff = "NOM NOMNOM... OM NOM\n%s" % random.choice(sandvich)
@@ -408,7 +408,7 @@ def onPubmsg(connection, event):
                 else:
                     print('SOMETHING WENT WRONG, OH SO WRONG BABY')
             else:
-                n = random.choice(dnd.keys())
+                n = random.choice(list(dnd))
                 connection.privmsg(channel, '%s: %s' % (n, dnd[n]))
         if (lowm=='!vend' and enabled(connection.server, channel, 'vend')) or (lowm=='!blend' and enabled(connection.server, channel, 'blend')):
             vend = random.choice(vendlist)
