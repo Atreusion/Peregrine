@@ -557,8 +557,8 @@ def onKick(connection,event):
     if kicked in adminlist:
         adminlist.remove(kicked)
     if kicked == connection.get_nickname():
-    	global adminlist
-    	adminlist = []
+        global adminlist
+        adminlist = []
         try:
             for num in (5.0,10.0,20.0,30.0): threading.Timer(num, connection.join, args=[channel]).start()
         except:
