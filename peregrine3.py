@@ -196,7 +196,7 @@ def onPubmsg(connection, event):
         if lowm == "!version":
             connection.privmsg(channel, 'I am version .834662g :( (You act like this bot will ever be worthy of a version 1)')
         if lowm.startswith("~status ") and len(message)>8 and nick in adminlist:
-            service = message(8:)
+            service = message[8:]
             try:
                 output = subprocess.check_output(['service', service, 'status'])
                 status = output.splitlines()[2].decode('utf-8')[11:27]
@@ -437,7 +437,7 @@ def onPubmsg(connection, event):
             connection.privmsg(channel, output)
     except:
         connection.privmsg(channel, traceback.format_exc().splitlines()[-1])
-    if nick in adminlist and lowm=='!quit':
+    if nick in adminlist and lowm=='~quit':
         shutdown()
         
 def nick_strip(s):
