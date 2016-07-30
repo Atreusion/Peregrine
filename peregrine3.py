@@ -42,22 +42,6 @@ temp_disabled={
 'treat':{'disabled_on' : [], 'limit':5.0, 'last_used':0.0},
 'emote':{'disabled_on' : [], 'limit':5.0, 'last_used':0.0}
 }
-server_data = {
-'irc.chatspike.net' : {
-    'port' : 6667,
-    'nickname' : 'PeregrineBot',
-    'channels' : ['#uespwiki', '#bots', '#pandemonium'],
-    'object' : None,
-    'password' : chatspikepass
-    },
-'irc.freenode.net' : {
-    'port' : 6667,
-    'nickname' : 'PeregrineBot',
-    'channels' : ['#necrolounge','#dongs'],
-    'object' : None,
-    'password' : freenodepass
-    }
-}
 
 def shutdown():
     checktimer.stop()
@@ -176,6 +160,22 @@ nickserv = load_data('nickserv.bot', {'twitchircpass':"", 'chatspikepass':"", 'f
 twitchircpass = nickserv['twitchircpass']
 chatspikepass = nickserv['chatspikepass']
 freenodepass = nickserv['freenodepass']
+server_data = {
+'irc.chatspike.net' : {
+    'port' : 6667,
+    'nickname' : 'PeregrineBot',
+    'channels' : ['#uespwiki', '#bots', '#pandemonium'],
+    'object' : None,
+    'password' : chatspikepass
+    },
+'irc.freenode.net' : {
+    'port' : 6667,
+    'nickname' : 'PeregrineBot',
+    'channels' : ['#necrolounge','#dongs'],
+    'object' : None,
+    'password' : freenodepass
+    }
+}
 			
 def onWelcome(connection, event):
     for channel in server_data[connection.server]['channels']:
