@@ -257,14 +257,19 @@ def onPubmsg(connection, event):
                 # {'script' : {'disabled_on' : ['servername#channel',''], 'limit' : 5.0, 'last_used' : 0.0}}
                 save_data("disabled.bot", disabled)
         if lowm.startswith('!toggled '):
+            print('1')
             query = lowm[9:]
             if lowm.startswith('!toggled #'):
+            	print('2')
                 server_channel = connection.server + query
                 disabledlist = ""
                 for script in disabled:
+                print(script + " run")
                     if server_channel in disabled[script]['disabled_on']: disabledlist = disabledlist + script + " "
                 connection.privmsg(channel, 'Scripts disabled in %s: %s' % (query, disabledlist))
+                print('3')
             elif query in disabled:
+            	print('4')
                 server_channel = connection.server + channel
                 if server_channel in disabled[query]['disabled_on']: connection.privmsg(channel, "%s is disabled on this channel." % query)
                 else: connection.privmsg(channel, "%s is enabled on this channel." % query)
