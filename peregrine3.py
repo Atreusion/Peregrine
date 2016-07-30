@@ -164,17 +164,17 @@ server_data = {
 'irc.chatspike.net' : {
     'port' : 6667,
     'nickname' : 'PeregrineBot',
-    'channels' : ['#uespwiki', '#bots', '#pandemonium'],
+    'channels' : ['#bots'],#['#uespwiki', '#bots', '#pandemonium'],
     'object' : None,
     'password' : chatspikepass
-    },
-'irc.freenode.net' : {
-    'port' : 6667,
-    'nickname' : 'PeregrineBot',
-    'channels' : ['#necrolounge','#dongs'],
-    'object' : None,
-    'password' : freenodepass
     }
+#'irc.freenode.net' : {
+#    'port' : 6667,
+#    'nickname' : 'PeregrineBot',
+#    'channels' : ['#necrolounge','#dongs'],
+#    'object' : None,
+#    'password' : freenodepass
+#    }
 }
 			
 def onWelcome(connection, event):
@@ -451,7 +451,7 @@ def raw(connection, event):
     timenow = time.strftime('%X', time.localtime())
     if len(args)>2:
         if args[1] == 'PRIVMSG' and not args[2].lower() == connection.nickname.lower():
-            nick = nicksplit(args[0])[1:]
+            nick = args[0].split("!")[0]
             print('%s %s %s <%s> %s' % (connection.server, timenow, args[2], nick, ' '.join(args[3:])[1:]))
         else:
             arguments = 'ERROR'.join(event.arguments)
