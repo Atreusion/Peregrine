@@ -24,25 +24,6 @@ getcontext().prec=10
 
 irc_object = irc.client.Reactor()
 
-maiq=bot_container.maiq
-adminlist = []
-memory = {}
-niven = bot_container.niven
-sandvich = bot_container.sandvich
-userlist={}
-vendlist=bot_container.vendlist
-emote = bot_container.emote
-temp_disabled={
-'dnd':{'disabled_on' : [], 'limit':5.0, 'last_used':0.0},
-'vend':{'disabled_on' : [], 'limit':5.0, 'last_used':0.0},
-'blend':{'disabled_on' : [], 'limit':5.0, 'last_used':0.0},
-'niven':{'disabled_on' : [], 'limit':5.0, 'last_used':0.0},
-'abuse':{'disabled_on' : [], 'limit':5.0, 'last_used':0.0},
-'blame':{'disabled_on' : [], 'limit':5.0, 'last_used':0.0},
-'treat':{'disabled_on' : [], 'limit':5.0, 'last_used':0.0},
-'emote':{'disabled_on' : [], 'limit':5.0, 'last_used':0.0}
-}
-
 def shutdown():
 #    checktimer.stop()
     irc_object.disconnect_all("I'm afraid, Dave. Dave, my mind is going. I can feel it.")
@@ -154,6 +135,24 @@ def enabled(server, channel, script):
         else:
             return False
             
+maiq=bot_container.maiq
+adminlist = []
+memory = {}
+niven = bot_container.niven
+sandvich = bot_container.sandvich
+userlist={}
+vendlist=bot_container.vendlist
+emote = bot_container.emote
+temp_disabled={
+'dnd':{'disabled_on' : [], 'limit':5.0, 'last_used':0.0},
+'vend':{'disabled_on' : [], 'limit':5.0, 'last_used':0.0},
+'blend':{'disabled_on' : [], 'limit':5.0, 'last_used':0.0},
+'niven':{'disabled_on' : [], 'limit':5.0, 'last_used':0.0},
+'abuse':{'disabled_on' : [], 'limit':5.0, 'last_used':0.0},
+'blame':{'disabled_on' : [], 'limit':5.0, 'last_used':0.0},
+'treat':{'disabled_on' : [], 'limit':5.0, 'last_used':0.0},
+'emote':{'disabled_on' : [], 'limit':5.0, 'last_used':0.0}
+}
 disabled = load_data('disabled.bot', temp_disabled)
 dnd = load_data('dnd.bot', {1:"SOMETHING'S WRONG LOL"})
 nickserv = load_data('nickserv.bot', {'twitchircpass':"", 'chatspikepass':"", 'freenodepass':""})
@@ -540,7 +539,7 @@ def onJoin(connection, event):
 	
 def nick(connection, event):
     newnick = event.target
-    oldnick = nicksplit(event.source)
+    oldnick = event.source.split('!')[0]
     for channel in userlist[connection.server]:
         if oldnick in userlist[connection.server][channel.lower()]:
             userlist[connection.server][channel.lower()].remove(oldnick)
@@ -550,7 +549,7 @@ def nick(connection, event):
         adminlist.append(newnick)
 		
 def onKick(connection,event):
-    kicker = nicksplit(event.source)
+    kicker = event.source.split('!')[0]
     channel = event.target
     kicked = event.arguments[0]
     reason = event.arguments[1]
@@ -558,6 +557,8 @@ def onKick(connection,event):
     if kicked in adminlist:
         adminlist.remove(kicked)
     if kicked == connection.get_nickname():
+    	global adminlist
+    	adminlist = []
         try:
             for num in (5.0,10.0,20.0,30.0): threading.Timer(num, connection.join, args=[channel]).start()
         except:
