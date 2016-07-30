@@ -15,7 +15,6 @@ from time import strftime
 from time import gmtime
 import os
 import urllib
-import urllib2
 import bot_container
 import decimal
 from decimal import *
@@ -153,8 +152,8 @@ def httpget(url,data=None):
     try:
         if data: data = urllib.urlencode(data)
         headers = { 'User-Agent' : 'Mozilla/4.0 (compatible; MSIE 5.5; Windows NT) Peregrine/1.0' }
-        request = urllib2.Request(url,data,headers)
-        opener = urllib2.build_opener()
+        request = urllib.Request(url,data,headers)
+        opener = urllib.build_opener()
         f = opener.open(request)
         src = f.read(500000)
         f.close()
