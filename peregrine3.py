@@ -195,7 +195,7 @@ def onPubmsg(connection, event):
     nick = event.source.split('!')[0]
     words = message.split()
     lwords = lowm.split()
-	if channel==connection.get_nickname(): channel=nick # Basic query support, don't blame me if it goes wrong
+    if channel==connection.get_nickname(): channel=nick # Basic query support, don't blame me if it goes wrong
     try:
         if lowm == "!version":
             connection.privmsg(channel, 'I am version .834662g :( (You act like this bot will ever be worthy of a version 1)')
