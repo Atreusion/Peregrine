@@ -44,7 +44,7 @@ temp_disabled={
 }
 
 def shutdown():
-    checktimer.stop()
+#    checktimer.stop()
     irc_object.disconnect_all("I'm afraid, Dave. Dave, my mind is going. I can feel it.")
     sys.exit(0)
 	
