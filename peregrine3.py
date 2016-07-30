@@ -14,7 +14,7 @@ import time
 from time import strftime
 from time import gmtime
 import os
-import urllib
+import urllib.parse
 import bot_container
 from datetime import datetime
 from datetime import timedelta
@@ -107,7 +107,7 @@ def say(connection, channel, text):
 def httpget(url,data=None):
     """Returns a string that contains the source code of the url."""
     try:
-        if data: data = urllib.urlencode(data)
+        if data: data = urllib.parse.urlencode(data)
         headers = { 'User-Agent' : 'Mozilla/4.0 (compatible; MSIE 5.5; Windows NT) Peregrine/1.0' }
         request = urllib.Request(url,data,headers)
         opener = urllib.build_opener()
@@ -213,7 +213,7 @@ def onPubmsg(connection, event):
             connection.privmsg(channel, random.choice(emote))
         if lowm.startswith("!wp "):
             args = message[4:]
-            args=urllib.urlencode({'' :args})
+            args=urllib.parse.urlencode({'' :args})
             args=args[1:].replace('+','_')
             connection.privmsg(channel, 'http://en.wikipedia.org/wiki/%s' % args)
         if lowm.startswith('objection') and enabled(connection.server, channel, 'objection') and "#"==channel[0]:
@@ -230,7 +230,7 @@ def onPubmsg(connection, event):
             search = words[1]
             failure = """Your search - <b>%s</b> - did not match any documents""" % search
             failbot = "No results found for <b>"
-            url = 'http://www.google.com/search?%s' % urllib.urlencode({'q' :search})
+            url = 'http://www.google.com/search?%s' % urllib.parse.urlencode({'q' :search})
             if not failure in httpget(url) and not failbot in httpget(url):
                 connection.privmsg(channel, url)
             else:
@@ -287,7 +287,7 @@ def onPubmsg(connection, event):
         if (lowm.startswith('!stfw ') or lowm.startswith('!jfgi ')) and enabled(connection.server, channel, 'jfgi'):
             words = message.split(' ', 1)
             search = words[1]
-            connection.privmsg(channel, 'http://www.justfuckinggoogleit.com/search.pl?%s' % urllib.urlencode({'query' :search}))
+            connection.privmsg(channel, 'http://www.justfuckinggoogleit.com/search.pl?%s' % urllib.parse.urlencode({'query' :search}))
     #>>> strftime("%a, %d %b %Y %H:%M:%S +0000", gmtime())
     #'Thu, 28 Jun 2001 14:17:15 +0000'
         if nick in adminlist and lowm.startswith('~exec '):
@@ -454,15 +454,6 @@ def names(connection, event):
     remove_dups(userlist[connection.server][channel])
 
 def raw(connection, event):
-## Bucket!bucket@irc.peeron.com PRIVMSG #bucket :Something.
-## <&Atreus> ~exec say event.arguments
-## <&Peregrine> ['~exec say event.arguments']
-## <&Atreus> ~exec say event.source
-## <&Peregrine> Atreus!Erasmus@nw-55A3C2E8.bltmmd.fios.verizon.net
-## <&Atreus> ~exec say event.target
-## <&Peregrine> #stagecrew
-## <&Atreus> ~exec say event.eventtype()
-## <&Peregrine> pubmsg
     args = ''.join(event.arguments).split()
     timenow = time.strftime('%X', time.localtime())
     if len(args)>2:
@@ -590,7 +581,6 @@ def ping(server_object, server):
     try:
         server_object.ping(server)
     except:
-        #server_object.disconnect() <-- don't need this because the failed ping calls onDisconnect!
         port = server_data[server]['port']
         nickname = server_data[server]['nickname']
         server_password = server_data[server]['password']
