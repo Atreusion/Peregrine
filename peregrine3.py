@@ -253,8 +253,11 @@ def onPubmsg(connection, event):
                     connection.privmsg(channel, "%s was enabled on %s." % (script, channel))
                     save_data("disabled.bot", disabled)
                 else:
+                    print('1')
                     disabled[script]['disabled_on'].append(server_channel)
+                    print('1')
                     connection.privmsg(channel, "%s was disabled on %s." % (script, channel))
+                    print('1')
                     save_data("disabled.bot", disabled)
             else:
                 disabled[script] = {'disabled_on':[server_channel], 'limit':5.0, 'last_used':0.0}
