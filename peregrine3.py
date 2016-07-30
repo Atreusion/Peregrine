@@ -16,11 +16,9 @@ from time import gmtime
 import os
 import urllib
 import bot_container
-import decimal
-from decimal import *
 from datetime import datetime
 from datetime import timedelta
-getcontext().prec=10
+
 
 irc_object = irc.client.Reactor()
 
@@ -197,6 +195,18 @@ def onPubmsg(connection, event):
     try:
         if lowm == "!version":
             connection.privmsg(channel, 'I am version .834662g :( (You act like this bot will ever be worthy of a version 1)')
+        if lowm.startswith("~status ") and len(message)>8 and nick in adminlist:
+            service = message(8:)
+            try:
+                output = subprocess.check_output(['service', service, 'status'])
+                status = output.splitlines()[2].decode('utf-8')[11:27]
+                connection.privmsg(channel, service + " " + status)
+            except subprocess.CalledProcessError:
+                errtrace = traceback.format_exc()
+                if errtrace[-9:-1] == "status 3":
+                    connection.privmsg(channel, service + " not active")
+            except:
+                pass
         if lowm == "!github":
             connection.privmsg(channel, 'https://github.com/Atreus11/Peregrine')
         if message in emote and enabled(connection.server, channel, 'emote'):
