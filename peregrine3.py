@@ -387,7 +387,7 @@ def onPubmsg(connection, event):
                                 if search in rule[1].lower() and iteration==number:
                                     connection.privmsg(channel, str(rule[0]) + ': ' + rule[1])
                                     break
-                                elif search in rule[1].lower() and iteration<>number:
+                                elif search in rule[1].lower() and iteration != number:
                                     number-=1
                     else:
                         tmp=[]
@@ -515,7 +515,7 @@ def names(connection, event):
 def onQuit(connection, event):
     reason=''.join(event.arguments)
     nick = event.source.split('!')[0]
-    if nick<>connection.get_nickname():
+    if not nick == connection.get_nickname():
         for channel in userlist[connection.server]:
             if nick in userlist[connection.server][channel.lower()]:
                 userlist[connection.server][channel.lower()].remove(nick)
