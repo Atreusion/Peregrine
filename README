@@ -4,5 +4,6 @@ Hi, I'm Atreusion, and this is my horribly written bot.
 
 The bulk of the bot's logic is held in peregrine.py.
 Files are in the files folder.
-irclib is the IRC library.
 bot_container holds a bunch of boring stuff I didn't want cluttering the bot code up.
+
+Need to pip3 install irc and passlib.
