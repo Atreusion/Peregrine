@@ -1,0 +1,5 @@
+#!/usr/bin/bash
+
+# Start Peregrine, duh
+# Use with "screen -dm -S peregrine ~/Peregrine/Peregrine-at-boot" in /etc/rc.local
+python3 peregrine3.py
