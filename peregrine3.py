@@ -43,7 +43,7 @@ def load_data( filename, default={}, override=True ):
 def save_data( filename, data ):
     """save_data("some_list.bot", some_list)"""
     path = os.sep.join([os.getcwd(), 'files', filename])
-    with open( path, 'wb' ) as f: pickle.dump(data, f)
+    with open( path, 'wb' ) as f: pickle.dump(data, f, pickle.HIGHEST_PROTOCOL)
     
 class RepeatingTimer:
     """Given to Atreus by Kindari.  I think he made it.  Example commented out below."""
