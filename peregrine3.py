@@ -154,22 +154,21 @@ temp_disabled={
 }
 disabled = load_data('disabled.bot', temp_disabled)
 dnd = load_data('dnd.bot', {1:"SOMETHING'S WRONG LOL"})
-nickserv = load_data('nickserv.bot', {'twitchircpass':"", 'chatspikepass':"", 'freenodepass':""})
-twitchircpass = nickserv['twitchircpass']
+nickserv = load_data('nickserv.bot', {'chatspikepass':"", 'freenodepass':""})
 chatspikepass = nickserv['chatspikepass']
 freenodepass = nickserv['freenodepass']
 server_data = {
 'irc.chatspike.net' : {
     'port' : 6667,
     'nickname' : 'PeregrineBot',
-    'channels' : ['#uespwiki', '#bots', '#pandemonium'],
+    'channels' : ['#uespwiki', '#pandemonium'],
     'object' : None,
     'password' : chatspikepass
     },
 'irc.freenode.net' : {
     'port' : 6667,
     'nickname' : 'PeregrineBot',
-    'channels' : ['#necrolounge','#dongs'],
+    'channels' : ['#dongs'],
     'object' : None,
     'password' : freenodepass
     }
@@ -354,18 +353,6 @@ def onPubmsg(connection, event):
         if lowm=='!sandvich':
             stuff = "NOM NOMNOM... OM NOM\n%s" % random.choice(sandvich)
             say(connection, channel, stuff)
-#        if lowm.startswith('!content') and len(message)==9:
-#            url='http://content%s.uesp.net/server-status' % message[8]
-##            try:
-#            code=httpget(url)
-#            uptime=code.split('Server uptime: ')[1].split('<br>')[0]
-#            accesses=code.split('Total accesses: ')[1].split(' - ')[0]
-#            traffic=code.split('Total Traffic: ')[1].split('<br>')[0]
-#            rs=code.split('CPU load<br>\n')[1].split('<br>')[0]
-#            servers=code.split('B/request<br>\n\n')[1].split('\n')[0]
-#            load=code.split('CPU load<br>')[0].split()[-1]
-#            connection.privmsg(channel, 'Uptime: %s.  Load: %s CPU.  Accesses: %s.  Traffic: %s.  Bandwidth: %s.  Servers: %s' % (uptime,load,accesses,traffic,rs,servers))
-#            del code
         if lowm.startswith('~connect ') and len(lwords)==2 and nick in adminlist:
             if lwords[1] in server_data:
                 port = server_data[lwords[1]]['port']
@@ -398,7 +385,6 @@ def onPubmsg(connection, event):
                             search = ' '.join(lwords[2:])
                             iteration=1
                             items=dnd.items()
-#                    items.sort() # not sure why i needed this.  maybe it breaks without it, LET'S FIND OUT # apparently it doesn't.  okiedokiethen
                             for rule in items:
                                 if search in rule[1].lower() and iteration==number:
                                     connection.privmsg(channel, str(rule[0]) + ': ' + rule[1])
